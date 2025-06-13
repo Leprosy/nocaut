@@ -1,7 +1,7 @@
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Dice } from "@/constants/types";
+import { Dice } from "@/lib/Die";
 import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
 
