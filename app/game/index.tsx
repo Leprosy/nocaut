@@ -8,6 +8,7 @@ import { StyleSheet } from "react-native";
 export default function Index() {
   const dice = new Dice(5);
   dice.roll();
+  console.log(dice.getHand());
 
   return (
     <ParallaxScrollView
