@@ -1,12 +1,13 @@
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { Dice } from "@/constants/types";
 import { Image } from "expo-image";
-import { useState } from "react";
 import { StyleSheet } from "react-native";
 
 export default function Index() {
-  const [hand, setHand] = useState();
+  const dice = new Dice(5);
+  dice.roll();
 
   return (
     <ParallaxScrollView
