@@ -3,12 +3,13 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Dice } from "@/lib/Die";
 import { Image } from "expo-image";
-import { StyleSheet } from "react-native";
+import { useState } from "react";
+import { Button, StyleSheet } from "react-native";
 
 export default function Index() {
   const dice = new Dice(5);
-  dice.roll();
-  console.log(dice.getHand());
+  const [roll, setRoll] = useState<string>("");
+  const [hand, setHand] = useState<string>("");
 
   return (
     <ParallaxScrollView
@@ -17,6 +18,19 @@ export default function Index() {
     >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Game Home tab</ThemedText>
+        <Button
+          onPress={() => {
+            setRoll(dice.roll());
+            setHand(dice.getHand());
+          }}
+          title="Roll!"
+        />
+        <ThemedView style={styles.titleContainer}>
+          <ThemedText>Roll:{roll}</ThemedText>
+        </ThemedView>
+        <ThemedView style={styles.titleContainer}>
+          <ThemedText>Hand:{hand}</ThemedText>
+        </ThemedView>
       </ThemedView>
     </ParallaxScrollView>
   );
