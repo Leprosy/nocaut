@@ -1,36 +1,66 @@
+import { DiceComponent } from "@/components/game/Die";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Dice } from "@/lib/Die";
+import { Dice, Die } from "@/lib/Die";
 import { Image } from "expo-image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, StyleSheet } from "react-native";
 
 export default function Index() {
-  const dice = new Dice(5);
-  const [roll, setRoll] = useState<string>("");
+  const [dice, setDice] = useState<Die[]>([]);
   const [hand, setHand] = useState<string>("");
+  const [selected, setSelected] = useState<number[]>([]);
+
+  const roll = () => {
+    const newDice = Array(5);
+    for (let i = 0; i < 5; ++i) {
+      if (selected.indexOf(i) < 0) {
+        newDice[i] = new Die();
+      } else {
+        newDice[i] = dice[i];
+      }
+    }
+
+    setDice(newDice);
+  };
+
+  useEffect(() => {
+    roll();
+  }, []);
+
+  useEffect(() => {
+    if (dice.length > 0) setHand(Dice.getHand(dice));
+  }, [dice]);
 
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
       headerImage={<Image source={require("@/assets/images/partial-react-logo.png")} style={styles.reactLogo} />}
     >
-      <ThemedView style={styles.titleContainer}>
+      <ThemedView style={[styles.titleContainer, { flexDirection: "column" }]}>
         <ThemedText type="title">Game Home tab</ThemedText>
         <Button
           onPress={() => {
-            setRoll(dice.roll());
-            setHand(dice.getHand());
+            roll();
           }}
           title="Roll!"
         />
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText>Roll:{roll}</ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText>Hand:{hand}</ThemedText>
-        </ThemedView>
+
+        <ThemedText>Hand: {hand}</ThemedText>
+        <ThemedText>Selected: {JSON.stringify(selected)}</ThemedText>
+
+        <DiceComponent
+          dice={dice}
+          onPress={(i: number) => {
+            const index = selected.indexOf(i);
+            if (index < 0) {
+              setSelected([...selected, i]);
+            } else {
+              setSelected([...selected.filter((j: number) => i !== j)]);
+            }
+          }}
+        />
       </ThemedView>
     </ParallaxScrollView>
   );
