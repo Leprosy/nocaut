@@ -16,20 +16,15 @@ export class Die {
   maxValue: number;
   material: DieMaterial;
 
-  constructor() {
+  constructor(maxValue?: number) {
     this.value = 0;
-    this.maxValue = 6;
+    this.maxValue = maxValue || 6;
     this.material = DieMaterial.Default;
-  }
-
-  roll() {
     this.value = 1 + Math.round(Math.random() * (this.maxValue - 1));
   }
 }
 
 export class Dice {
-  dice: Die[];
-
   static getCountArr(data: [string, number][]) {
     const formatted = data.map((item) => {
       return { rank: parseInt(item[0]), count: item[1] };
@@ -48,21 +43,23 @@ export class Dice {
     });
   }
 
-  constructor(totalDice: number) {
-    this.dice = [];
-    for (let i = 0; i < totalDice; ++i) this.dice.push(new Die());
+  static ones(value: number) {
+    return value === 1 ? 10 : value;
   }
 
-  setDice(arr: number[]) {
-    arr.forEach((value, i) => (this.dice[i].value = arr[i]));
+  static generate(values: number[]): Die[] {
+    const dice: Die[] = [];
+
+    values.forEach((val: number) => {
+      const die = new Die();
+      die.value = val;
+      dice.push(die);
+    });
+
+    return dice;
   }
 
-  roll() {
-    this.dice.forEach((die) => die.roll());
-    return JSON.stringify(this.dice.map((i) => i.value)); // debug
-  }
-
-  getHand() {
+  static getHand(dice: Die[]) {
     /*
     pair
     2 pairs
@@ -73,8 +70,11 @@ export class Dice {
     4 of a kind
     nocaut
     */
-    const counts = this.dice.reduce((acc: Record<number, number>, cur: Die) => {
-      if (!acc[cur.value]) acc[cur.value] = 0;
+    const counts = dice.reduce((acc: Record<number, number>, cur: Die) => {
+      if (!acc[cur.value]) {
+        acc[cur.value] = 0;
+      }
+
       acc[cur.value] += 1;
       return acc;
     }, {});
@@ -82,35 +82,42 @@ export class Dice {
     const countArr = Dice.getCountArr(Object.entries(counts));
 
     // TODO: this algorithm works for 5 dice
-    if (countArr[0].count === this.dice.length) {
-      return `nocaut ${countArr[0].rank}`;
+    if (countArr[0].count === dice.length) {
+      return `Knockout ${countArr[0].rank}!`;
     }
 
     if (countArr[0].count === 4) {
-      return `four of a kind ${countArr[0].rank}`;
+      return `Four of a Kind ${countArr[0].rank}`;
     }
 
     if (countArr[0].count === 3) {
       if (countArr[1].count === 2) {
-        return `full house ${countArr[0].rank}/${countArr[1].rank}`;
+        return `Full House ${Dice.ones(countArr[0].rank)}${countArr[1].rank}`;
       }
-      return `three of a kind ${countArr[0].rank}`;
+
+      return `Three of a Kind ${countArr[0].rank}`;
     }
 
     if (countArr[0].count === 2) {
       if (countArr[1].count === 2) {
-        return `two pairs ${countArr[0].rank}/${countArr[1].rank}`;
+        return `Two Pairs ${Dice.ones(countArr[0].rank)}${countArr[1].rank}`;
       }
-      return `pair ${countArr[0].rank}`;
+
+      return `Pair of ${countArr[0].rank}`;
     }
 
     let isStraight = true;
-    countArr.forEach((item: { rank: number; count: number }, i: number) => {
-      if (i > 0 && item.rank !== countArr[i - 1].rank - 1) {
-        isStraight = false;
+    let ranks = countArr.map((item: { rank: number; count: number }) => item.rank);
+    ranks.sort();
+
+    ranks.forEach((item: number, i: number) => {
+      if (i > 0) {
+        if (item !== ranks[i - 1] + 1) {
+          isStraight = false;
+        }
       }
     });
 
-    return isStraight ? "straight" : "???";
+    return isStraight ? "Straight" : "???";
   }
 }
