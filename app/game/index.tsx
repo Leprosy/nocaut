@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Button, StyleSheet } from "react-native";
 
 export default function Index() {
+  const [log, setLog] = useState<string[]>([]);
   const [hand, setHand] = useState(0);
   const [roll, setRoll] = useState(0);
   const [dice, setDice] = useState<Die[]>([]);
@@ -36,9 +37,31 @@ export default function Index() {
     rollDice();
   }, []);
 
-  useEffect(() => {
-    if (dice.length > 0) setHandName(Dice.getHand(dice));
-  }, [dice]);
+  const scoreHand = () => {
+    if (dice.length > 0) {
+      const handData = Dice.getHand(dice);
+      console.log(handData);
+      let points = 0;
+      let log = [];
+
+      // Base
+      points += handData.base;
+      log.push("Base " + handData.base);
+
+      // Dice
+      const scored = dice.filter((i, j) => handData.die.indexOf(j) >= 0);
+      scored.forEach((die) => (points += die.value));
+      log.push(scored.map((die) => die.value).join("+"));
+
+      // Mult
+      points *= handData.mult;
+      log.push("X " + handData.mult);
+
+      setHandName(handData.name);
+      setScore(score + points);
+      setLog(log);
+    }
+  };
 
   return (
     <ParallaxScrollView
@@ -59,9 +82,13 @@ export default function Index() {
           />
           <Button
             onPress={() => {
-              if (roll < maxHands) {
-                setRoll(0);
-                setHand(hand + 1);
+              scoreHand();
+
+              if (hand < maxHands) {
+                setTimeout(() => {
+                  setRoll(0);
+                  setHand(hand + 1);
+                }, 4000);
               }
             }}
             title="Play Hand"
@@ -85,7 +112,17 @@ export default function Index() {
             }
           }}
         />
-        {roll !== 0 && <ThemedText>You got: {handName}</ThemedText>}
+        {roll !== 0 && (
+          <>
+            <ThemedText>You got: {handName}</ThemedText>
+            <ThemedText type="default">Hand scored:</ThemedText>
+            {log.map((item, i) => (
+              <ThemedText key={i} type="default">
+                {item}
+              </ThemedText>
+            ))}
+          </>
+        )}
       </ThemedView>
     </ParallaxScrollView>
   );

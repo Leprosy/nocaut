@@ -9,6 +9,12 @@ export type Hand = {
   name: string;
   base: number;
   mult: number;
+  die: number[];
+};
+
+export type countData = {
+  rank: number;
+  count: number;
 };
 
 export class Die {
@@ -25,7 +31,7 @@ export class Die {
 }
 
 export class Dice {
-  static getCountArr(data: [string, number][]) {
+  static getCountArr(data: [string, number][]): countData[] {
     const formatted = data.map((item) => {
       return { rank: parseInt(item[0]), count: item[1] };
     });
@@ -59,7 +65,16 @@ export class Dice {
     return dice;
   }
 
-  static getHand(dice: Die[]) {
+  static getScoredDie(dice: Die[], ranks: number[]): number[] {
+    const scored: number[] = [];
+
+    dice.forEach((die, i) => {
+      if (ranks.indexOf(die.value) >= 0) scored.push(i);
+    });
+    return scored;
+  }
+
+  static getHand(dice: Die[]): Hand {
     /*
     pair
     2 pairs
@@ -83,27 +98,57 @@ export class Dice {
 
     // TODO: this algorithm works for 5 dice
     if (countArr[0].count === dice.length) {
-      return `Knockout ${countArr[0].rank}!`;
+      return {
+        name: `Knockout ${countArr[0].rank}!`,
+        base: 48,
+        mult: 7,
+        die: Dice.getScoredDie(countArr, [countArr[0].rank]),
+      };
     }
 
     if (countArr[0].count === 4) {
-      return `Four of a Kind ${countArr[0].rank}`;
+      return {
+        name: `Four of a Kind ${countArr[0].rank}`,
+        base: 24,
+        mult: 7,
+        die: Dice.getScoredDie(dice, [countArr[0].rank]),
+      };
     }
 
     if (countArr[0].count === 3) {
       if (countArr[1].count === 2) {
-        return `Full House ${Dice.ones(countArr[0].rank)}${countArr[1].rank}`;
+        return {
+          name: `Full House ${Dice.ones(countArr[0].rank)}${countArr[1].rank}`,
+          base: 16,
+          mult: 4,
+          die: Dice.getScoredDie(dice, [countArr[0].rank, countArr[1].rank]),
+        };
       }
 
-      return `Three of a Kind ${countArr[0].rank}`;
+      return {
+        name: `Three of a Kind ${countArr[0].rank}`,
+        base: 12,
+        mult: 3,
+        die: Dice.getScoredDie(dice, [countArr[0].rank]),
+      };
     }
 
     if (countArr[0].count === 2) {
       if (countArr[1].count === 2) {
-        return `Two Pairs ${Dice.ones(countArr[0].rank)}${countArr[1].rank}`;
+        return {
+          name: `Two Pairs ${Dice.ones(countArr[0].rank)}${countArr[1].rank}`,
+          base: 8,
+          mult: 2,
+          die: Dice.getScoredDie(dice, [countArr[0].rank, countArr[1].rank]),
+        };
       }
 
-      return `Pair of ${countArr[0].rank}`;
+      return {
+        name: `Pair of ${countArr[0].rank}`,
+        base: 4,
+        mult: 2,
+        die: Dice.getScoredDie(dice, [countArr[0].rank]),
+      };
     }
 
     let isStraight = true;
@@ -118,6 +163,8 @@ export class Dice {
       }
     });
 
-    return isStraight ? "Straight" : "???";
+    return isStraight
+      ? { name: "Straight", base: 12, mult: 4, die: [0, 1, 2, 3, 4] }
+      : { name: "???", base: 8, mult: 3, die: [0, 1, 2, 3, 4] }; // TODO: 5 die only?
   }
 }
