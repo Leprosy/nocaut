@@ -74,9 +74,6 @@ export default function Index() {
         </ThemedView>
 
         <ThemedText type="title">Score: {score}</ThemedText>
-        <ThemedText>You got: {handName}</ThemedText>
-        {/* <ThemedText>Selected: {JSON.stringify(selected)}</ThemedText> */}
-
         <DiceComponent
           dice={dice}
           onPress={(i: number) => {
@@ -88,6 +85,7 @@ export default function Index() {
             }
           }}
         />
+        {roll !== 0 && <ThemedText>You got: {handName}</ThemedText>}
       </ThemedView>
     </ParallaxScrollView>
   );
