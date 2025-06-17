@@ -8,12 +8,19 @@ import { useEffect, useState } from "react";
 import { Button, StyleSheet } from "react-native";
 
 export default function Index() {
+  const [hand, setHand] = useState(0);
+  const [roll, setRoll] = useState(0);
   const [dice, setDice] = useState<Die[]>([]);
-  const [hand, setHand] = useState<string>("");
+  const [score, setScore] = useState(0);
+  const [handName, setHandName] = useState<string>("");
   const [selected, setSelected] = useState<number[]>([]);
 
-  const roll = () => {
+  const maxRolls = 2;
+  const maxHands = 4;
+
+  const rollDice = () => {
     const newDice = Array(5);
+
     for (let i = 0; i < 5; ++i) {
       if (selected.indexOf(i) < 0) {
         newDice[i] = new Die();
@@ -26,11 +33,11 @@ export default function Index() {
   };
 
   useEffect(() => {
-    roll();
+    rollDice();
   }, []);
 
   useEffect(() => {
-    if (dice.length > 0) setHand(Dice.getHand(dice));
+    if (dice.length > 0) setHandName(Dice.getHand(dice));
   }, [dice]);
 
   return (
@@ -40,15 +47,35 @@ export default function Index() {
     >
       <ThemedView style={[styles.titleContainer, { flexDirection: "column" }]}>
         <ThemedText type="title">Game Home tab</ThemedText>
-        <Button
-          onPress={() => {
-            roll();
-          }}
-          title="Roll!"
-        />
+        <ThemedView style={{ flexDirection: "row", gap: 5 }}>
+          <Button
+            onPress={() => {
+              if (roll < maxRolls) {
+                rollDice();
+                setRoll(roll + 1);
+              }
+            }}
+            title="Roll"
+          />
+          <Button
+            onPress={() => {
+              if (roll < maxHands) {
+                setRoll(0);
+                setHand(hand + 1);
+              }
+            }}
+            title="Play Hand"
+          />
+        </ThemedView>
 
-        <ThemedText>Hand: {hand}</ThemedText>
-        <ThemedText>Selected: {JSON.stringify(selected)}</ThemedText>
+        <ThemedView style={{ flexDirection: "row", gap: 5 }}>
+          <ThemedText>Hands: {maxHands - hand}</ThemedText>
+          <ThemedText>Rolls: {maxRolls - roll}</ThemedText>
+        </ThemedView>
+
+        <ThemedText type="title">Score: {score}</ThemedText>
+        <ThemedText>You got: {handName}</ThemedText>
+        {/* <ThemedText>Selected: {JSON.stringify(selected)}</ThemedText> */}
 
         <DiceComponent
           dice={dice}
