@@ -9,7 +9,7 @@ export type Hand = {
   name: string;
   base: number;
   mult: number;
-  die: number[];
+  scoredDie: number[];
 };
 
 export type countData = {
@@ -102,7 +102,7 @@ export class Dice {
         name: `Knockout ${countArr[0].rank}!`,
         base: 48,
         mult: 7,
-        die: Dice.getScoredDie(countArr, [countArr[0].rank]),
+        scoredDie: Dice.getScoredDie(dice, [countArr[0].rank]),
       };
     }
 
@@ -111,7 +111,7 @@ export class Dice {
         name: `Four of a Kind ${countArr[0].rank}`,
         base: 24,
         mult: 7,
-        die: Dice.getScoredDie(dice, [countArr[0].rank]),
+        scoredDie: Dice.getScoredDie(dice, [countArr[0].rank]),
       };
     }
 
@@ -121,7 +121,7 @@ export class Dice {
           name: `Full House ${Dice.ones(countArr[0].rank)}${countArr[1].rank}`,
           base: 16,
           mult: 4,
-          die: Dice.getScoredDie(dice, [countArr[0].rank, countArr[1].rank]),
+          scoredDie: Dice.getScoredDie(dice, [countArr[0].rank, countArr[1].rank]),
         };
       }
 
@@ -129,7 +129,7 @@ export class Dice {
         name: `Three of a Kind ${countArr[0].rank}`,
         base: 12,
         mult: 3,
-        die: Dice.getScoredDie(dice, [countArr[0].rank]),
+        scoredDie: Dice.getScoredDie(dice, [countArr[0].rank]),
       };
     }
 
@@ -139,7 +139,7 @@ export class Dice {
           name: `Two Pairs ${Dice.ones(countArr[0].rank)}${countArr[1].rank}`,
           base: 8,
           mult: 2,
-          die: Dice.getScoredDie(dice, [countArr[0].rank, countArr[1].rank]),
+          scoredDie: Dice.getScoredDie(dice, [countArr[0].rank, countArr[1].rank]),
         };
       }
 
@@ -147,7 +147,7 @@ export class Dice {
         name: `Pair of ${countArr[0].rank}`,
         base: 4,
         mult: 2,
-        die: Dice.getScoredDie(dice, [countArr[0].rank]),
+        scoredDie: Dice.getScoredDie(dice, [countArr[0].rank]),
       };
     }
 
@@ -164,7 +164,7 @@ export class Dice {
     });
 
     return isStraight
-      ? { name: "Straight", base: 12, mult: 4, die: [0, 1, 2, 3, 4] }
-      : { name: "???", base: 8, mult: 3, die: [0, 1, 2, 3, 4] }; // TODO: 5 die only?
+      ? { name: "Straight", base: 12, mult: 4, scoredDie: [0, 1, 2, 3, 4] }
+      : { name: "???", base: 8, mult: 3, scoredDie: [0, 1, 2, 3, 4] }; // TODO: 5 die only?
   }
 }
