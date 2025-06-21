@@ -1,5 +1,6 @@
 import { Die } from "@/lib/Die";
 import { useState } from "react";
+import { TouchableOpacity } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { ThemedView } from "../ThemedView";
 
@@ -7,31 +8,31 @@ export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) 
   const [selected, setSelected] = useState(false);
 
   return (
-    <ThemedView
-      lightColor="#fff"
-      darkColor="#333"
-      style={{
-        borderWidth: 2,
-        borderColor: selected ? "#f00" : "#000",
-        borderRadius: 5,
-        padding: 5,
-        width: 50,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
+    <TouchableOpacity
+      activeOpacity={0.6}
+      onPress={() => {
+        onPress();
+        setSelected(!selected);
       }}
     >
-      <ThemedText
-        onPress={() => {
-          onPress();
-          setSelected(!selected);
+      <ThemedView
+        lightColor="#fff"
+        darkColor="#333"
+        style={{
+          borderWidth: 2,
+          borderColor: selected ? "#f00" : "#000",
+          borderRadius: 5,
+          width: 50,
+          height: 50,
+          alignItems: "center",
+          justifyContent: "center",
         }}
-        lightColor="#000"
-        darkColor="#fff"
       >
-        {die.value}
-      </ThemedText>
-    </ThemedView>
+        <ThemedText lightColor="#000" darkColor="#fff">
+          {die.value}
+        </ThemedText>
+      </ThemedView>
+    </TouchableOpacity>
   );
 }
 
