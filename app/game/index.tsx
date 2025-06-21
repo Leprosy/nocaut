@@ -4,20 +4,24 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Dice, Die } from "@/lib/Die";
 import { Image } from "expo-image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, StyleSheet } from "react-native";
 
 export default function Index() {
-  const [log, setLog] = useState<string[]>([]);
   const [hand, setHand] = useState(0);
   const [roll, setRoll] = useState(0);
   const [dice, setDice] = useState<Die[]>([]);
   const [score, setScore] = useState(0);
+
   const [handName, setHandName] = useState<string>("");
+  const [log, setLog] = useState<string[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
+
+  const [hasPlayed, setHasPlayed] = useState(false);
 
   const maxRolls = 2;
   const maxHands = 4;
+  const delay = 5000;
 
   const rollDice = () => {
     const newDice = Array(5);
@@ -33,10 +37,6 @@ export default function Index() {
     setDice(newDice);
   };
 
-  useEffect(() => {
-    rollDice();
-  }, []);
-
   const scoreHand = () => {
     if (dice.length > 0) {
       const handData = Dice.getHand(dice);
@@ -49,7 +49,7 @@ export default function Index() {
       log.push("Base " + handData.base);
 
       // Dice
-      const scored = dice.filter((i, j) => handData.die.indexOf(j) >= 0);
+      const scored = dice.filter((i, j) => handData.scoredDie.indexOf(j) >= 0);
       scored.forEach((die) => (points += die.value));
       log.push(scored.map((die) => die.value).join("+"));
 
@@ -57,10 +57,21 @@ export default function Index() {
       points *= handData.mult;
       log.push("X " + handData.mult);
 
+      // Total
+      log.push("TOTAL : " + points);
+
       setHandName(handData.name);
       setScore(score + points);
       setLog(log);
     }
+  };
+
+  const cleanUp = () => {
+    setHandName("");
+    setSelected([]);
+    setLog([]);
+    setDice([]);
+    setRoll(0);
   };
 
   return (
@@ -72,24 +83,25 @@ export default function Index() {
         <ThemedText type="title">Game Home tab</ThemedText>
         <ThemedView style={{ flexDirection: "row", gap: 5 }}>
           <Button
+            disabled={hasPlayed || roll >= maxRolls}
             onPress={() => {
-              if (roll < maxRolls) {
-                rollDice();
-                setRoll(roll + 1);
-              }
+              rollDice();
+              setRoll(roll + 1);
             }}
             title="Roll"
           />
+
           <Button
+            disabled={hasPlayed || dice.length === 0 || hand >= maxHands}
             onPress={() => {
               scoreHand();
+              setHasPlayed(true);
 
-              if (hand < maxHands) {
-                setTimeout(() => {
-                  setRoll(0);
-                  setHand(hand + 1);
-                }, 4000);
-              }
+              setTimeout(() => {
+                setHand(hand + 1);
+                cleanUp();
+                setHasPlayed(false);
+              }, delay);
             }}
             title="Play Hand"
           />
@@ -112,7 +124,8 @@ export default function Index() {
             }
           }}
         />
-        {roll !== 0 && (
+
+        {hasPlayed && (
           <>
             <ThemedText>You got: {handName}</ThemedText>
             <ThemedText type="default">Hand scored:</ThemedText>
