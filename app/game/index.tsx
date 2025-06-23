@@ -40,7 +40,6 @@ export default function Index() {
       const handData = Dice.getHand(dice);
       console.log(handData);
       let points = 0;
-      //let log = [];
 
       // Hand
       await executeWait(() => setLog([...log, "You got " + handData.name]), DELAY);
@@ -79,32 +78,50 @@ export default function Index() {
   return (
     <ThemedView style={[styles.titleContainer, { flexDirection: "column", gap: 10 }]}>
       <ThemedView style={{ flexDirection: "column", alignItems: "center", gap: 20 }}>
-        <ThemedText type="subtitle">{status === GameStatus.DEAD ? "Game Over" : "Round " + round}</ThemedText>
-        <ThemedText type="subtitle">
-          Score: {score}/{ROUND_POINTS * round}
-        </ThemedText>
+        {status === GameStatus.PLAYING && (
+          <>
+            <ThemedText type="subtitle">Round {round}</ThemedText>
+            <ThemedText type="subtitle">
+              Score: {score}/{ROUND_POINTS * round}
+            </ThemedText>
 
-        <ThemedView style={{ flexDirection: "row", gap: 5 }}>
-          <Button
-            disabled={!(maxRoll - roll)}
-            onPress={() => {
-              rollDice();
-              dispatch({ type: "roll" });
-            }}
-            title="Roll"
-          />
+            <ThemedView style={{ flexDirection: "row", gap: 5 }}>
+              <Button
+                disabled={!(maxRoll - roll)}
+                onPress={() => {
+                  rollDice();
+                  dispatch({ type: "roll" });
+                }}
+                title="Roll"
+              />
 
-          <Button
-            disabled={!!log.length}
-            onPress={() => {
-              scoreHand();
-            }}
-            title="Play"
-          />
-        </ThemedView>
+              <Button
+                disabled={!!log.length}
+                onPress={() => {
+                  scoreHand();
+                }}
+                title="Play"
+              />
+            </ThemedView>
 
-        <ThemedText>Hands: {maxHand - hand}</ThemedText>
-        <ThemedText>Rolls: {maxRoll - roll}</ThemedText>
+            <ThemedText>Hands: {maxHand - hand}</ThemedText>
+            <ThemedText>Rolls: {maxRoll - roll}</ThemedText>
+          </>
+        )}
+
+        {status === GameStatus.DEAD && (
+          <>
+            <ThemedText type="title">You Suck!</ThemedText>
+            <Button onPress={() => dispatch({ type: "reset" })} title="Start Over" />
+          </>
+        )}
+
+        {status === GameStatus.WON && (
+          <>
+            <ThemedText type="title">Round clear!</ThemedText>
+            <Button onPress={() => dispatch({ type: "round" })} title="Next Round" />
+          </>
+        )}
       </ThemedView>
 
       <ThemedView>
