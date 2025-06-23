@@ -1,13 +1,12 @@
 import { DiceComponent } from "@/components/game/Die";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Dice, Die } from "@/lib/Die";
-import { Image } from "expo-image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, StyleSheet } from "react-native";
 
 export default function Index() {
+  const [round, setRound] = useState(1);
   const [hand, setHand] = useState(0);
   const [roll, setRoll] = useState(0);
   const [dice, setDice] = useState<Die[]>([]);
@@ -18,7 +17,9 @@ export default function Index() {
   const [selected, setSelected] = useState<number[]>([]);
 
   const [hasPlayed, setHasPlayed] = useState(false);
+  const [isDead, setIsDead] = useState(false);
 
+  const roundValue = 500;
   const maxRolls = 2;
   const maxHands = 4;
   const delay = 5000;
@@ -50,8 +51,8 @@ export default function Index() {
 
       // Dice
       const scored = dice.filter((i, j) => handData.scoredDie.indexOf(j) >= 0);
-      scored.forEach((die) => (points += die.value));
-      log.push(scored.map((die) => die.value).join("+"));
+      scored.forEach((die) => (points += die.value === 1 ? 10 : die.value));
+      log.push(scored.map((die) => (die.value === 1 ? 10 : die.value)).join("+"));
 
       // Mult
       points *= handData.mult;
@@ -74,13 +75,30 @@ export default function Index() {
     setRoll(0);
   };
 
+  useEffect(() => {
+    console.log(hand);
+
+    // Scored
+    if (score >= roundValue * round) {
+      console.log("You won");
+      setIsDead(true);
+    } else {
+      // Busted
+      if (hand >= maxHands) {
+        console.log("You are dead!");
+        setIsDead(true);
+      }
+    }
+  }, [hand]);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={<Image source={require("@/assets/images/partial-react-logo.png")} style={styles.reactLogo} />}
-    >
-      <ThemedView style={[styles.titleContainer, { flexDirection: "column" }]}>
-        <ThemedText type="title">Game Home tab</ThemedText>
+    <ThemedView style={[styles.titleContainer, { flexDirection: "column", gap: 10 }]}>
+      <ThemedView style={{ flexDirection: "column", alignItems: "center", gap: 20 }}>
+        <ThemedText type="subtitle">{isDead ? "Game Over" : "Round " + round}</ThemedText>
+        <ThemedText type="subtitle">
+          Score: {score}/{round * roundValue}
+        </ThemedText>
+
         <ThemedView style={{ flexDirection: "row", gap: 5 }}>
           <Button
             disabled={hasPlayed || roll >= maxRolls}
@@ -103,16 +121,15 @@ export default function Index() {
                 setHasPlayed(false);
               }, delay);
             }}
-            title="Play Hand"
+            title="Play"
           />
         </ThemedView>
 
-        <ThemedView style={{ flexDirection: "row", gap: 5 }}>
-          <ThemedText>Hands: {maxHands - hand}</ThemedText>
-          <ThemedText>Rolls: {maxRolls - roll}</ThemedText>
-        </ThemedView>
+        <ThemedText>Hands: {maxHands - hand}</ThemedText>
+        <ThemedText>Rolls: {maxRolls - roll}</ThemedText>
+      </ThemedView>
 
-        <ThemedText type="title">Score: {score}</ThemedText>
+      <ThemedView>
         <DiceComponent
           dice={dice}
           onPress={(i: number) => {
@@ -137,7 +154,7 @@ export default function Index() {
           </>
         )}
       </ThemedView>
-    </ParallaxScrollView>
+    </ThemedView>
   );
 }
 

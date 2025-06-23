@@ -2,7 +2,7 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Image } from "expo-image";
-import { Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
 import { StyleSheet } from "react-native";
 
 export default function HomeScreen() {
@@ -13,8 +13,10 @@ export default function HomeScreen() {
         headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
         headerImage={<Image source={require("@/assets/images/partial-react-logo.png")} style={styles.reactLogo} />}
       >
-        <ThemedView style={styles.titleContainer}>
+        <ThemedView style={[styles.titleContainer, { flexDirection: "column", gap: 10 }]}>
           <ThemedText type="title">Nocaut!</ThemedText>
+          <Link href={"/game"}>Start New Run</Link>
+          <Link href={""}>Credits</Link>
         </ThemedView>
       </ParallaxScrollView>
     </>

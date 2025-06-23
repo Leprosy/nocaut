@@ -28,6 +28,8 @@ export class Die {
     this.material = DieMaterial.Default;
     this.value = 1 + Math.round(Math.random() * (this.maxValue - 1));
   }
+
+  flip() {}
 }
 
 export class Dice {

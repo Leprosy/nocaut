@@ -1,44 +1,72 @@
 import { Die } from "@/lib/Die";
-import { useState } from "react";
-import { TouchableOpacity } from "react-native";
-import { ThemedText } from "../ThemedText";
+import { useEffect, useState } from "react";
+import { Animated, Easing, Image, TouchableOpacity } from "react-native";
 import { ThemedView } from "../ThemedView";
 
 export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) {
   const [selected, setSelected] = useState(false);
+  const angle = new Animated.Value(0);
+
+  useEffect(() => {
+    console.log("new", die);
+  }, [die]);
+
+  useEffect(
+    () =>
+      Animated.timing(angle, {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(),
+    [die]
+  );
+
+  const spin = angle.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
 
   return (
     <TouchableOpacity
       activeOpacity={0.6}
+      onLongPress={() => {
+        //roll();
+        console.log("flip die?");
+      }}
       onPress={() => {
         onPress();
         setSelected(!selected);
       }}
     >
-      <ThemedView
-        lightColor="#fff"
-        darkColor="#333"
+      <Animated.View
         style={{
-          borderWidth: 2,
-          borderColor: selected ? "#f00" : "#000",
-          borderRadius: 5,
+          transform: [{ rotate: spin }],
           width: 50,
           height: 50,
-          alignItems: "center",
-          justifyContent: "center",
+          overflow: "hidden",
+          borderWidth: 1,
+          borderColor: selected ? "#f00" : "#000",
+          borderRadius: 5,
         }}
       >
-        <ThemedText lightColor="#000" darkColor="#fff">
-          {die.value}
-        </ThemedText>
-      </ThemedView>
+        <Image
+          style={{
+            width: 150,
+            height: 100,
+            left: -50 * ((die.value - 1) % 3),
+            top: -50 * (die.value > 3 ? 1 : 0),
+          }}
+          source={require("@/assets/dice/default.png")}
+        />
+      </Animated.View>
     </TouchableOpacity>
   );
 }
 
 export function DiceComponent({ dice, onPress }: { dice: Die[]; onPress: Function }) {
   return (
-    <ThemedView style={{ backgroundColor: "#00f", flex: 1, padding: 5, gap: 5, flexDirection: "row" }}>
+    <ThemedView style={{ flex: 1, padding: 5, gap: 5, flexDirection: "row" }}>
       {dice.map((die: Die, i: number) => (
         <DieComponent key={i} die={die} onPress={() => onPress(i)} />
       ))}
