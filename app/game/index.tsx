@@ -2,27 +2,24 @@ import { DiceComponent } from "@/components/game/Die";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Dice, Die } from "@/lib/Die";
-import { useEffect, useState } from "react";
+import { executeWait } from "@/lib/Utils";
+import { useState } from "react";
 import { Button, StyleSheet } from "react-native";
+import { ROUND_POINTS } from "../context/GameState/constants";
+import { useGameStateContext } from "../context/GameState/GameState";
+import { GameStatus } from "../context/GameState/types";
 
 export default function Index() {
-  const [round, setRound] = useState(1);
-  const [hand, setHand] = useState(0);
-  const [roll, setRoll] = useState(0);
-  const [dice, setDice] = useState<Die[]>([]);
-  const [score, setScore] = useState(0);
+  const {
+    state: { round, hand, maxHand, roll, maxRoll, score, status },
+    dispatch,
+  } = useGameStateContext();
 
-  const [handName, setHandName] = useState<string>("");
+  const [dice, setDice] = useState<Die[]>([]);
   const [log, setLog] = useState<string[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
 
-  const [hasPlayed, setHasPlayed] = useState(false);
-  const [isDead, setIsDead] = useState(false);
-
-  const roundValue = 500;
-  const maxRolls = 2;
-  const maxHands = 4;
-  const delay = 5000;
+  const DELAY = 2000;
 
   const rollDice = () => {
     const newDice = Array(5);
@@ -38,95 +35,76 @@ export default function Index() {
     setDice(newDice);
   };
 
-  const scoreHand = () => {
+  const scoreHand = async () => {
     if (dice.length > 0) {
       const handData = Dice.getHand(dice);
       console.log(handData);
       let points = 0;
-      let log = [];
+      //let log = [];
+
+      // Hand
+      await executeWait(() => setLog([...log, "You got " + handData.name]), DELAY);
 
       // Base
       points += handData.base;
-      log.push("Base " + handData.base);
+      await executeWait(() => setLog([...log, "Base " + handData.base]), DELAY);
 
       // Dice
       const scored = dice.filter((i, j) => handData.scoredDie.indexOf(j) >= 0);
       scored.forEach((die) => (points += die.value === 1 ? 10 : die.value));
-      log.push(scored.map((die) => (die.value === 1 ? 10 : die.value)).join("+"));
+      await executeWait(
+        () => setLog([...log, scored.map((die) => (die.value === 1 ? 10 : die.value)).join("+")]),
+        DELAY
+      );
 
       // Mult
       points *= handData.mult;
-      log.push("X " + handData.mult);
+      await executeWait(() => setLog([...log, "X " + handData.mult]), DELAY);
 
       // Total
-      log.push("TOTAL : " + points);
+      await executeWait(() => setLog([...log, "TOTAL : " + points]), DELAY);
 
-      setHandName(handData.name);
-      setScore(score + points);
-      setLog(log);
+      dispatch({ type: "setScore", payload: score + points });
+      dispatch({ type: "hand" });
+      cleanUp();
     }
   };
 
   const cleanUp = () => {
-    setHandName("");
     setSelected([]);
     setLog([]);
     setDice([]);
-    setRoll(0);
   };
-
-  useEffect(() => {
-    console.log(hand);
-
-    // Scored
-    if (score >= roundValue * round) {
-      console.log("You won");
-      setIsDead(true);
-    } else {
-      // Busted
-      if (hand >= maxHands) {
-        console.log("You are dead!");
-        setIsDead(true);
-      }
-    }
-  }, [hand]);
 
   return (
     <ThemedView style={[styles.titleContainer, { flexDirection: "column", gap: 10 }]}>
       <ThemedView style={{ flexDirection: "column", alignItems: "center", gap: 20 }}>
-        <ThemedText type="subtitle">{isDead ? "Game Over" : "Round " + round}</ThemedText>
+        <ThemedText type="subtitle">{status === GameStatus.DEAD ? "Game Over" : "Round " + round}</ThemedText>
         <ThemedText type="subtitle">
-          Score: {score}/{round * roundValue}
+          Score: {score}/{ROUND_POINTS * round}
         </ThemedText>
 
         <ThemedView style={{ flexDirection: "row", gap: 5 }}>
           <Button
-            disabled={hasPlayed || roll >= maxRolls}
+            disabled={!(maxRoll - roll)}
             onPress={() => {
               rollDice();
-              setRoll(roll + 1);
+              dispatch({ type: "roll" });
             }}
             title="Roll"
           />
 
           <Button
-            disabled={hasPlayed || dice.length === 0 || hand >= maxHands}
+            disabled={!!log.length}
             onPress={() => {
               scoreHand();
-              setHasPlayed(true);
-
-              setTimeout(() => {
-                setHand(hand + 1);
-                cleanUp();
-                setHasPlayed(false);
-              }, delay);
             }}
             title="Play"
           />
         </ThemedView>
 
-        <ThemedText>Hands: {maxHands - hand}</ThemedText>
-        <ThemedText>Rolls: {maxRolls - roll}</ThemedText>
+        <ThemedText>Hands: {maxHand - hand}</ThemedText>
+        <ThemedText>Rolls: {maxRoll - roll}</ThemedText>
       </ThemedView>
 
       <ThemedView>
@@ -142,10 +120,8 @@ export default function Index() {
           }}
         />
 
-        {hasPlayed && (
+        {!!log.length && (
           <>
-            <ThemedText>You got: {handName}</ThemedText>
-            <ThemedText type="default">Hand scored:</ThemedText>
             {log.map((item, i) => (
               <ThemedText key={i} type="default">
                 {item}
