@@ -4,9 +4,11 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedButton } from "@/components/ui/ThemedButton";
 import { DISPLAY_DELAY } from "@/constants/constants";
 import { ROUND_POINTS } from "@/context/GameState/constants";
+import { GameStatus } from "@/context/GameState/types";
 import { Dice, Die } from "@/lib/Die";
 import { executeWait } from "@/lib/Utils";
-import { useState } from "react";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useGameStateContext } from "../../context/GameState/GameState";
 
@@ -16,18 +18,9 @@ export default function Index() {
     dispatch,
   } = useGameStateContext();
 
+  const router = useRouter();
   const [dice, setDice] = useState<Die[]>([]);
-  const [log, setLog] = useState<string[]>([
-    "asdsad",
-    "asdsad",
-    "asdsad",
-    "asdsad",
-    "asdsad",
-    "asdsad",
-    "asdsad",
-    "asdsad",
-    "asdsad",
-  ]);
+  const [log, setLog] = useState<string[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
 
   const rollDice = () => {
@@ -83,6 +76,24 @@ export default function Index() {
     setLog([]);
     setDice([]);
   };
+
+  useEffect(() => {
+    switch (status) {
+      case GameStatus.PLAYING:
+        console.log("we are playing");
+        break;
+
+      case GameStatus.DEAD:
+        dispatch({ type: "reset" });
+        router.navigate("/game/game-over");
+        break;
+
+      case GameStatus.WON:
+        dispatch({ type: "round" });
+        router.navigate("/game/won");
+        break;
+    }
+  }, [status, router]);
 
   return (
     <ThemedView style={[styles.mainContainer]}>
@@ -257,20 +268,8 @@ const styles = StyleSheet.create({
   },
 
   col: {
+    flex: 1,
     flexDirection: "column",
     gap: 5,
   },
-
-  /* 
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-  }, */
 });
