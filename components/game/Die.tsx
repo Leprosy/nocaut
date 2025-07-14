@@ -1,6 +1,6 @@
 import { Die } from "@/lib/Die";
 import { useEffect, useState } from "react";
-import { Animated, Easing, Image, TouchableOpacity } from "react-native";
+import { Animated, Easing, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { ThemedView } from "../ThemedView";
 
 export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) {
@@ -66,10 +66,21 @@ export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) 
 
 export function DiceComponent({ dice, onPress }: { dice: Die[]; onPress: Function }) {
   return (
-    <ThemedView style={{ flex: 1, padding: 5, gap: 5, flexDirection: "row" }}>
+    <ThemedView style={[styles.diceContainer]}>
       {dice.map((die: Die, i: number) => (
         <DieComponent key={i} die={die} onPress={() => onPress(i)} />
       ))}
     </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  diceContainer: {
+    flex: 1,
+    gap: 5,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
