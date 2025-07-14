@@ -11,7 +11,8 @@ export default function HomeScreen() {
       headerImage={<Image source={require("@/assets/images/partial-react-logo.png")} style={styles.reactLogo} />}
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Taldo... oaw!</ThemedText>
+        <ThemedText type="subtitle">Game code</ThemedText>
+        <ThemedText type="subtitle">Leprosy</ThemedText>
       </ThemedView>
     </ParallaxScrollView>
   );
