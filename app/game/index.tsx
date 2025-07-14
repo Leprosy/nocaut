@@ -1,3 +1,4 @@
+import { DiceComponent } from "@/components/game/Die";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedButton } from "@/components/ui/ThemedButton";
@@ -6,7 +7,7 @@ import { ROUND_POINTS } from "@/context/GameState/constants";
 import { Dice, Die } from "@/lib/Die";
 import { executeWait } from "@/lib/Utils";
 import { useState } from "react";
-import { Button, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useGameStateContext } from "../../context/GameState/GameState";
 
 export default function Index() {
@@ -16,7 +17,17 @@ export default function Index() {
   } = useGameStateContext();
 
   const [dice, setDice] = useState<Die[]>([]);
-  const [log, setLog] = useState<string[]>(["string one", "string two"]);
+  const [log, setLog] = useState<string[]>([
+    "asdsad",
+    "asdsad",
+    "asdsad",
+    "asdsad",
+    "asdsad",
+    "asdsad",
+    "asdsad",
+    "asdsad",
+    "asdsad",
+  ]);
   const [selected, setSelected] = useState<number[]>([]);
 
   const rollDice = () => {
@@ -76,34 +87,65 @@ export default function Index() {
   return (
     <ThemedView style={[styles.mainContainer]}>
       <ThemedView style={[styles.hudContainer]}>
-        <ThemedText type="subtitle">Round {round}</ThemedText>
-        <ThemedText>
-          Score: {score}/{ROUND_POINTS * round}
+        <ThemedText type="subtitle" style={{ textAlign: "center" }}>
+          Round {round}
         </ThemedText>
 
-        <ThemedView style={{ flexDirection: "row", gap: 5 }}>
-          <ThemedButton label="Press me" onPress={() => console.log("oaw")} />
+        <ThemedView style={[styles.row]}>
+          <ThemedView style={[styles.col]}>
+            <ThemedText>
+              Score: {score}/{ROUND_POINTS * round}
+            </ThemedText>
 
-          <Button
-            disabled={!(maxRoll - roll)}
-            onPress={() => {
-              rollDice();
-              dispatch({ type: "roll" });
-            }}
-            title="Roll"
-          />
+            <ThemedView style={[styles.buttonRow]}>
+              <ThemedButton
+                disabled={!(maxRoll - roll)}
+                onPress={() => {
+                  rollDice();
+                  dispatch({ type: "roll" });
+                }}
+                label="Roll"
+              />
 
-          <Button
-            disabled={!!log.length}
-            onPress={() => {
-              scoreHand();
-            }}
-            title="Play"
-          />
+              <ThemedButton
+                disabled={!dice.length || !!log.length}
+                onPress={() => {
+                  scoreHand();
+                }}
+                label="Play"
+              />
+            </ThemedView>
+          </ThemedView>
+
+          <ThemedView style={[styles.col]}>
+            <ThemedText>Hands: {maxHand - hand}</ThemedText>
+            <ThemedText>Rolls: {maxRoll - roll}</ThemedText>
+          </ThemedView>
         </ThemedView>
+      </ThemedView>
 
-        <ThemedText>Hands: {maxHand - hand}</ThemedText>
-        <ThemedText>Rolls: {maxRoll - roll}</ThemedText>
+      <DiceComponent
+        dice={dice}
+        onPress={(i: number) => {
+          const index = selected.indexOf(i);
+          if (index < 0) {
+            setSelected([...selected, i]);
+          } else {
+            setSelected([...selected.filter((j: number) => i !== j)]);
+          }
+        }}
+      />
+
+      <ThemedView style={[styles.logContainer]}>
+        {!!log.length && (
+          <>
+            {log.map((item, i) => (
+              <ThemedText key={i} type="default" style={{ textAlign: "center" }}>
+                {item}
+              </ThemedText>
+            ))}
+          </>
+        )}
       </ThemedView>
     </ThemedView>
   );
@@ -186,15 +228,37 @@ const styles = StyleSheet.create({
   mainContainer: {
     height: "100%",
     flexDirection: "column",
-    alignItems: "center",
     justifyContent: "center",
     gap: 8,
   },
 
   hudContainer: {
+    height: "20%",
     flexDirection: "column",
     alignItems: "center",
     gap: 20,
+  },
+
+  logContainer: {
+    height: "20%",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 2,
+  },
+
+  row: {
+    flexDirection: "row",
+    gap: 20,
+  },
+
+  buttonRow: {
+    flexDirection: "row",
+    gap: 5,
+  },
+
+  col: {
+    flexDirection: "column",
+    gap: 5,
   },
 
   /* 

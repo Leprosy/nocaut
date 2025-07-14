@@ -9,7 +9,6 @@ export type ThemedTextProps = TextProps & {
 
 export function ThemedText({ style, lightColor, darkColor, type = "default", ...rest }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
-  console.log(color);
   return <Text style={[{ fontFamily: "Font", color }, styles[type] || undefined, style]} {...rest} />;
 }
 

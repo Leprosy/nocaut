@@ -4,16 +4,24 @@ import { ThemedText } from "../ThemedText";
 
 export type ThemedButtonProps = ViewProps & {
   label: string;
+  disabled?: boolean;
   onPress: () => void;
   lightColor?: string;
   darkColor?: string;
 };
 
-export function ThemedButton({ label, onPress, lightColor, darkColor, ...otherProps }: ThemedButtonProps) {
+export function ThemedButton({
+  label,
+  disabled = false,
+  onPress,
+  lightColor,
+  darkColor,
+  ...otherProps
+}: ThemedButtonProps) {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "button");
   const shadowColor = useThemeColor({ light: lightColor, dark: darkColor }, "shadow");
 
-  return (
+  return !disabled ? (
     <Pressable
       onPressOut={() => onPress()}
       style={({ pressed }) => [
@@ -27,6 +35,10 @@ export function ThemedButton({ label, onPress, lightColor, darkColor, ...otherPr
       ]}
       {...otherProps}
     >
+      <ThemedText type="button">{label}</ThemedText>
+    </Pressable>
+  ) : (
+    <Pressable style={{ backgroundColor: shadowColor, padding: 4, top: 1, left: 1 }}>
       <ThemedText type="button">{label}</ThemedText>
     </Pressable>
   );
