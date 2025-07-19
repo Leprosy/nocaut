@@ -1,25 +1,17 @@
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { Colors } from "@/constants/Colors";
 import { Pressable, type ViewProps } from "react-native";
-import { ThemedText } from "../ThemedText";
+import { Typo } from "./Typo";
 
-export type ThemedButtonProps = ViewProps & {
+export type ButtonProps = ViewProps & {
   label: string;
+  color?: keyof typeof Colors;
   disabled?: boolean;
   onPress: () => void;
-  lightColor?: string;
-  darkColor?: string;
 };
 
-export function ThemedButton({
-  label,
-  disabled = false,
-  onPress,
-  lightColor,
-  darkColor,
-  ...otherProps
-}: ThemedButtonProps) {
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "button");
-  const shadowColor = useThemeColor({ light: lightColor, dark: darkColor }, "shadow");
+export function Button({ label, disabled = false, onPress, color, ...otherProps }: ButtonProps) {
+  const backgroundColor = Colors[color || "info"];
+  const shadowColor = Colors.shadow;
 
   return !disabled ? (
     <Pressable
@@ -35,11 +27,11 @@ export function ThemedButton({
       ]}
       {...otherProps}
     >
-      <ThemedText type="button">{label}</ThemedText>
+      <Typo type="button">{label}</Typo>
     </Pressable>
   ) : (
     <Pressable style={{ backgroundColor: shadowColor, padding: 4, top: 1, left: 1 }}>
-      <ThemedText type="button">{label}</ThemedText>
+      <Typo type="button">{label}</Typo>
     </Pressable>
   );
 }

@@ -1,15 +1,18 @@
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { Colors } from "@/constants/Colors";
 import { StyleSheet, Text, type TextProps } from "react-native";
 
-export type ThemedTextProps = TextProps & {
-  lightColor?: string;
-  darkColor?: string;
+export type TypoProps = TextProps & {
+  color?: keyof typeof Colors;
   type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link" | "button";
 };
 
-export function ThemedText({ style, lightColor, darkColor, type = "default", ...rest }: ThemedTextProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
-  return <Text style={[{ fontFamily: "Font", color }, styles[type] || undefined, style]} {...rest} />;
+export function Typo({ style, color, type = "default", ...rest }: TypoProps) {
+  return (
+    <Text
+      style={[{ fontFamily: "Font", color: Colors[color || "text"] }, styles[type] || undefined, style]}
+      {...rest}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -26,7 +29,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: "bold",
     lineHeight: 42,
-    textShadowColor: "#666",
+    textShadowColor: Colors.shadow,
     textShadowOffset: { width: 4, height: 4 },
     textShadowRadius: 20,
   },
@@ -37,7 +40,7 @@ const styles = StyleSheet.create({
   link: {
     lineHeight: 30,
     fontSize: 16,
-    color: "#0a7ea4",
+    color: Colors.link,
   },
   button: {
     fontSize: 12,

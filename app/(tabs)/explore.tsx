@@ -1,13 +1,11 @@
-import { Image } from "expo-image";
-import { Platform, StyleSheet } from "react-native";
-
 import { Collapsible } from "@/components/Collapsible";
 import { ExternalLink } from "@/components/ExternalLink";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { Card, Typo } from "@/components/ui";
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { Image } from "expo-image";
 import { Link } from "expo-router";
+import { Platform, StyleSheet } from "react-native";
 
 export default function TabTwoScreen() {
   return (
@@ -22,72 +20,69 @@ export default function TabTwoScreen() {
         />
       }
     >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+      <Card style={styles.titleContainer}>
+        <Typo type="title">Explore</Typo>
         <Link href="/">Home?</Link>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
+      </Card>
+      <Typo>This app includes example code to help you get started.</Typo>
       <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens: <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText> sets up the tab
-          navigator.
-        </ThemedText>
+        <Typo>
+          This app has two screens: <Typo type="defaultSemiBold">app/(tabs)/index.tsx</Typo> and{" "}
+          <Typo type="defaultSemiBold">app/(tabs)/explore.tsx</Typo>
+        </Typo>
+        <Typo>
+          The layout file in <Typo type="defaultSemiBold">app/(tabs)/_layout.tsx</Typo> sets up the tab navigator.
+        </Typo>
         <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
+          <Typo type="link">Learn more</Typo>
         </ExternalLink>
       </Collapsible>
       <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
+        <Typo>
           You can open this project on Android, iOS, and the web. To open the web version, press{" "}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
+          <Typo type="defaultSemiBold">w</Typo> in the terminal running this project.
+        </Typo>
       </Collapsible>
       <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{" "}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for different screen densities
-        </ThemedText>
+        <Typo>
+          For static images, you can use the <Typo type="defaultSemiBold">@2x</Typo> and{" "}
+          <Typo type="defaultSemiBold">@3x</Typo> suffixes to provide files for different screen densities
+        </Typo>
         <Image source={require("@/assets/images/react-logo.png")} style={{ alignSelf: "center" }} />
         <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
+          <Typo type="link">Learn more</Typo>
         </ExternalLink>
       </Collapsible>
       <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{" "}
-          <ThemedText style={{ fontFamily: "Font" }}>custom fonts such as this one.</ThemedText>
-        </ThemedText>
+        <Typo>
+          Open <Typo type="defaultSemiBold">app/_layout.tsx</Typo> to see how to load{" "}
+          <Typo style={{ fontFamily: "Font" }}>custom fonts such as this one.</Typo>
+        </Typo>
         <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
+          <Typo type="link">Learn more</Typo>
         </ExternalLink>
       </Collapsible>
       <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{" "}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect what the user&apos;s
-          current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
+        <Typo>
+          This template has light and dark mode support. The <Typo type="defaultSemiBold">useColorScheme()</Typo> hook
+          lets you inspect what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
+        </Typo>
         <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
+          <Typo type="link">Learn more</Typo>
         </ExternalLink>
       </Collapsible>
       <Collapsible title="Animations">
-        <ThemedText>
+        <Typo>
           This template includes an example of an animated component. The{" "}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses the powerful{" "}
-          <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library to create a waving hand
-          animation.
-        </ThemedText>
+          <Typo type="defaultSemiBold">components/HelloWave.tsx</Typo> component uses the powerful{" "}
+          <Typo type="defaultSemiBold">react-native-reanimated</Typo> library to create a waving hand animation.
+        </Typo>
         {Platform.select({
           ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText> component provides a
-              parallax effect for the header image.
-            </ThemedText>
+            <Typo>
+              The <Typo type="defaultSemiBold">components/ParallaxScrollView.tsx</Typo> component provides a parallax
+              effect for the header image.
+            </Typo>
           ),
         })}
       </Collapsible>

@@ -1,8 +1,6 @@
 import { DiceComponent } from "@/components/game/Die";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { ThemedButton } from "@/components/ui/ThemedButton";
-import { DISPLAY_DELAY } from "@/constants/constants";
+import { Button, Card, Typo } from "@/components/ui";
+import { DISPLAY_DELAY } from "@/constants/Values";
 import { ROUND_POINTS } from "@/context/GameState/constants";
 import { GameStatus } from "@/context/GameState/types";
 import { Dice, Die } from "@/lib/Die";
@@ -96,20 +94,20 @@ export default function Index() {
   }, [status, router]);
 
   return (
-    <ThemedView style={[styles.mainContainer]}>
-      <ThemedView style={[styles.hudContainer]}>
-        <ThemedText type="subtitle" style={{ textAlign: "center" }}>
+    <Card style={[styles.mainContainer]}>
+      <Card style={[styles.hudContainer]}>
+        <Typo type="subtitle" style={{ textAlign: "center" }}>
           Round {round}
-        </ThemedText>
+        </Typo>
 
-        <ThemedView style={[styles.row]}>
-          <ThemedView style={[styles.col]}>
-            <ThemedText>
+        <Card style={[styles.row]}>
+          <Card style={[styles.col]}>
+            <Typo>
               Score: {score}/{ROUND_POINTS * round}
-            </ThemedText>
+            </Typo>
 
-            <ThemedView style={[styles.buttonRow]}>
-              <ThemedButton
+            <Card style={[styles.buttonRow]}>
+              <Button
                 disabled={!(maxRoll - roll)}
                 onPress={() => {
                   rollDice();
@@ -118,22 +116,22 @@ export default function Index() {
                 label="Roll"
               />
 
-              <ThemedButton
+              <Button
                 disabled={!dice.length || !!log.length}
                 onPress={() => {
                   scoreHand();
                 }}
                 label="Play"
               />
-            </ThemedView>
-          </ThemedView>
+            </Card>
+          </Card>
 
-          <ThemedView style={[styles.col]}>
-            <ThemedText>Hands: {maxHand - hand}</ThemedText>
-            <ThemedText>Rolls: {maxRoll - roll}</ThemedText>
-          </ThemedView>
-        </ThemedView>
-      </ThemedView>
+          <Card style={[styles.col]}>
+            <Typo>Hands: {maxHand - hand}</Typo>
+            <Typo>Rolls: {maxRoll - roll}</Typo>
+          </Card>
+        </Card>
+      </Card>
 
       <DiceComponent
         dice={dice}
@@ -147,93 +145,20 @@ export default function Index() {
         }}
       />
 
-      <ThemedView style={[styles.logContainer]}>
+      <Card style={[styles.logContainer]}>
         {!!log.length && (
           <>
             {log.map((item, i) => (
-              <ThemedText key={i} type="default" style={{ textAlign: "center" }}>
+              <Typo key={i} type="default" style={{ textAlign: "center" }}>
                 {item}
-              </ThemedText>
+              </Typo>
             ))}
           </>
         )}
-      </ThemedView>
-    </ThemedView>
+      </Card>
+    </Card>
   );
 }
-
-/* <ThemedView style={[styles.titleContainer, { flexDirection: "column", gap: 10 }]}>
-      <ThemedView style={[style.hudContainer]}>
-        {status === GameStatus.PLAYING && (
-          <>
-            <ThemedText type="subtitle">Round {round}</ThemedText>
-            <ThemedText type="subtitle">
-              Score: {score}/{ROUND_POINTS * round}
-            </ThemedText>
-
-            <ThemedView style={{ flexDirection: "row", gap: 5 }}>
-              <Button
-                disabled={!(maxRoll - roll)}
-                onPress={() => {
-                  rollDice();
-                  dispatch({ type: "roll" });
-                }}
-                title="Roll"
-              />
-
-              <Button
-                disabled={!!log.length}
-                onPress={() => {
-                  scoreHand();
-                }}
-                title="Play"
-              />
-            </ThemedView>
-
-            <ThemedText>Hands: {maxHand - hand}</ThemedText>
-            <ThemedText>Rolls: {maxRoll - roll}</ThemedText>
-          </>
-        )}
-
-        {status === GameStatus.DEAD && (
-          <>
-            <ThemedText type="title">You Suck!</ThemedText>
-            <Button onPress={() => dispatch({ type: "reset" })} title="Start Over" />
-          </>
-        )}
-
-        {status === GameStatus.WON && (
-          <>
-            <ThemedText type="title">Round clear!</ThemedText>
-            <Button onPress={() => dispatch({ type: "round" })} title="Next Round" />
-          </>
-        )}
-      </ThemedView>
-
-      <ThemedView>
-        <DiceComponent
-          dice={dice}
-          onPress={(i: number) => {
-            const index = selected.indexOf(i);
-            if (index < 0) {
-              setSelected([...selected, i]);
-            } else {
-              setSelected([...selected.filter((j: number) => i !== j)]);
-            }
-          }}
-        />
-
-        {!!log.length && (
-          <>
-            {log.map((item, i) => (
-              <ThemedText key={i} type="default">
-                {item}
-              </ThemedText>
-            ))}
-          </>
-        )}
-      </ThemedView>
-    </ThemedView> */
 
 const styles = StyleSheet.create({
   mainContainer: {

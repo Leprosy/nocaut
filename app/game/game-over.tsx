@@ -1,16 +1,15 @@
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { Card, Typo } from "@/components/ui";
 import { Link } from "expo-router";
 import { StyleSheet } from "react-native";
 
 export default function GameOver() {
   return (
-    <ThemedView style={[styles.mainContainer]}>
-      <ThemedText type="subtitle">GAME OVER!</ThemedText>
+    <Card style={[styles.mainContainer]}>
+      <Typo type="subtitle">GAME OVER!</Typo>
       <Link href="/">
-        <ThemedText type="link">Go to home</ThemedText>
+        <Typo type="link">Go to home</Typo>
       </Link>
-    </ThemedView>
+    </Card>
   );
 }
 

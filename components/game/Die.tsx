@@ -1,7 +1,7 @@
 import { Die } from "@/lib/Die";
 import { useEffect, useState } from "react";
 import { Animated, Easing, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { ThemedView } from "../ThemedView";
+import { Card } from "../ui";
 
 export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) {
   const [selected, setSelected] = useState(false);
@@ -66,11 +66,11 @@ export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) 
 
 export function DiceComponent({ dice, onPress }: { dice: Die[]; onPress: Function }) {
   return (
-    <ThemedView style={[styles.diceContainer]}>
+    <Card style={[styles.diceContainer]}>
       {dice.map((die: Die, i: number) => (
         <DieComponent key={i} die={die} onPress={() => onPress(i)} />
       ))}
-    </ThemedView>
+    </Card>
   );
 }
 

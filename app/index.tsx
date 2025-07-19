@@ -1,41 +1,29 @@
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { Card, Typo } from "@/components/ui";
+import { LSPACING } from "@/components/ui/constants";
 import { Link, Stack } from "expo-router";
-import { StyleSheet } from "react-native";
 
 export default function HomeScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: "Fuck you!" }} />
+      <Stack.Screen options={{ title: "Fuck you!", statusBarStyle: "dark" }} />
 
-      <ThemedView style={[styles.mainContainer]}>
-        <ThemedText type="title">Nocaut!</ThemedText>
+      <Card main color="bg" dir="column" align="center" justify="center" gap={LSPACING * 8}>
+        <Typo type="title">Nocaut!</Typo>
 
-        <ThemedView style={[styles.menuContainer]}>
+        <Card dir="column" align="center">
           <Link href={"/game"}>
-            <ThemedText type="subtitle">Start New Run</ThemedText>
+            <Typo type="subtitle" color="info">
+              Start New Run
+            </Typo>
           </Link>
 
           <Link href={"/credits"}>
-            <ThemedText type="subtitle">Credits</ThemedText>
+            <Typo type="subtitle" color="success">
+              Credits
+            </Typo>
           </Link>
-        </ThemedView>
-      </ThemedView>
+        </Card>
+      </Card>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 40,
-    height: "100%",
-  },
-  menuContainer: {
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 10,
-  },
-});
