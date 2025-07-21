@@ -7,7 +7,6 @@ import { Dice, Die } from "@/lib/Die";
 import { executeWait } from "@/lib/Utils";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
 import { useGameStateContext } from "../../context/GameState/GameState";
 
 export default function Index() {
@@ -94,19 +93,19 @@ export default function Index() {
   }, [status, router]);
 
   return (
-    <Card style={[styles.mainContainer]}>
-      <Card style={[styles.hudContainer]}>
+    <Card main color="bg" dir="column">
+      <Card dir="column" style={{ flex: 1 }}>
         <Typo type="subtitle" style={{ textAlign: "center" }}>
           Round {round}
         </Typo>
 
-        <Card style={[styles.row]}>
-          <Card style={[styles.col]}>
-            <Typo>
+        <Card dir="row">
+          <Card dir="column" align="center">
+            <Typo color="success">
               Score: {score}/{ROUND_POINTS * round}
             </Typo>
 
-            <Card style={[styles.buttonRow]}>
+            <Card dir="row">
               <Button
                 disabled={!(maxRoll - roll)}
                 onPress={() => {
@@ -126,26 +125,28 @@ export default function Index() {
             </Card>
           </Card>
 
-          <Card style={[styles.col]}>
-            <Typo>Hands: {maxHand - hand}</Typo>
-            <Typo>Rolls: {maxRoll - roll}</Typo>
+          <Card dir="column">
+            <Typo color="warning">Hands: {maxHand - hand}</Typo>
+            <Typo color="warning">Rolls: {maxRoll - roll}</Typo>
           </Card>
         </Card>
       </Card>
 
-      <DiceComponent
-        dice={dice}
-        onPress={(i: number) => {
-          const index = selected.indexOf(i);
-          if (index < 0) {
-            setSelected([...selected, i]);
-          } else {
-            setSelected([...selected.filter((j: number) => i !== j)]);
-          }
-        }}
-      />
+      <Card dir="column" style={{ flex: 1 }}>
+        <DiceComponent
+          dice={dice}
+          onPress={(i: number) => {
+            const index = selected.indexOf(i);
+            if (index < 0) {
+              setSelected([...selected, i]);
+            } else {
+              setSelected([...selected.filter((j: number) => i !== j)]);
+            }
+          }}
+        />
+      </Card>
 
-      <Card style={[styles.logContainer]}>
+      <Card dir="column" style={{ flex: 1 }}>
         {!!log.length && (
           <>
             {log.map((item, i) => (
@@ -159,42 +160,3 @@ export default function Index() {
     </Card>
   );
 }
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    height: "100%",
-    flexDirection: "column",
-    justifyContent: "center",
-    gap: 8,
-  },
-
-  hudContainer: {
-    height: "20%",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 20,
-  },
-
-  logContainer: {
-    height: "20%",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 2,
-  },
-
-  row: {
-    flexDirection: "row",
-    gap: 20,
-  },
-
-  buttonRow: {
-    flexDirection: "row",
-    gap: 5,
-  },
-
-  col: {
-    flex: 1,
-    flexDirection: "column",
-    gap: 5,
-  },
-});

@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { Die } from "@/lib/Die";
 import { useEffect, useState } from "react";
 import { Animated, Easing, Image, StyleSheet, TouchableOpacity } from "react-native";
@@ -76,7 +77,8 @@ export function DiceComponent({ dice, onPress }: { dice: Die[]; onPress: Functio
 
 const styles = StyleSheet.create({
   diceContainer: {
-    flex: 1,
+    height: "100%",
+    backgroundColor: Colors.bg2,
     gap: 5,
     display: "flex",
     flexDirection: "row",

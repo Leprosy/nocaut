@@ -1,3 +1,4 @@
+import { HelloWave } from "@/components/HelloWave";
 import { Card, Typo } from "@/components/ui";
 import { LSPACING } from "@/components/ui/constants";
 import { Link, Stack } from "expo-router";
@@ -13,7 +14,7 @@ export default function HomeScreen() {
         <Card dir="column" align="center">
           <Link href={"/game"}>
             <Typo type="subtitle" color="info">
-              Start New Run
+              Start New Run <HelloWave />
             </Typo>
           </Link>
 

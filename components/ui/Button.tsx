@@ -15,7 +15,7 @@ export function Button({ label, disabled = false, onPress, color, ...otherProps 
 
   return !disabled ? (
     <Pressable
-      onPressOut={() => onPress()}
+      onPress={() => onPress()}
       style={({ pressed }) => [
         {
           padding: 4,
