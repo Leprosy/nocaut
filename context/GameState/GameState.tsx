@@ -1,6 +1,5 @@
 import { createContext, PropsWithChildren, useContext, useReducer } from "react";
-import { rollAction } from "./actions";
-import { selectAction } from "./actions/selectAction";
+import { rollAction, selectAction } from "./actions";
 import { initialState, ROUND_POINTS } from "./constants";
 import { GameState, GameStateAction, GameStateProps, GameStatus } from "./types";
 
