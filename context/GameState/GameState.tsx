@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, useContext, useReducer } from "react";
-import { rollAction, selectAction } from "./actions";
+import { playHandAction, rollAction, selectAction } from "./actions";
 import { initialState, ROUND_POINTS } from "./constants";
 import { GameState, GameStateAction, GameStateProps, GameStatus } from "./types";
 
@@ -31,6 +31,8 @@ const reducer = (state: GameState, action: GameStateAction) => {
       break;
     case "select":
       newState = selectAction(state, action.payload);
+    case "playHand":
+      newState = playHandAction(state, action.payload);
   }
 
   // check status
