@@ -67,12 +67,15 @@ export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) 
 }
 
 export function DiceComponent() {
-  const { dice } = useGameStateContext();
+  const {
+    state: { dice, selected },
+    dispatch,
+  } = useGameStateContext();
 
   return (
     <Card style={[styles.diceContainer]}>
       {dice.map((die: Die, i: number) => (
-        <DieComponent key={i} die={die} onPress={() => onPress(i)} />
+        <DieComponent key={i} die={die} onPress={() => dispatch({ type: "select", payload: i })} />
       ))}
     </Card>
   );

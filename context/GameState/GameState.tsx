@@ -1,5 +1,6 @@
 import { createContext, PropsWithChildren, useContext, useReducer } from "react";
 import { rollAction } from "./actions";
+import { selectAction } from "./actions/selectAction";
 import { initialState, ROUND_POINTS } from "./constants";
 import { GameState, GameStateAction, GameStateProps, GameStatus } from "./types";
 
@@ -29,8 +30,8 @@ const reducer = (state: GameState, action: GameStateAction) => {
     case "setScore":
       newState = { ...state, score: parseInt(action.payload!) };
       break;
-    case "setSelected":
-      newState = { ...state, selected: action.payload };
+    case "select":
+      newState = selectAction(state, action.payload);
   }
 
   // check status

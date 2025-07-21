@@ -2,6 +2,8 @@ import { Die } from "@/lib/Die";
 import { GameStateActionHandler } from "../types";
 
 export const rollAction: GameStateActionHandler = (state, payload) => {
+  if (state.roll >= state.maxRoll) return state;
+
   const newDice = Array(5); // TODO: only 5 die?
 
   for (let i = 0; i < 5; ++i) {
@@ -12,5 +14,5 @@ export const rollAction: GameStateActionHandler = (state, payload) => {
     }
   }
 
-  return { ...state, roll: state.roll < state.maxRoll ? state.roll + 1 : state.roll, dice: newDice };
+  return { ...state, roll: state.roll + 1, dice: newDice };
 };
