@@ -132,7 +132,7 @@ export default function Index() {
         </Card>
       </Card>
 
-      <Card dir="column" style={{ flex: 1 }}>
+      <Card dir="column" style={{ flex: 2 }}>
         <DiceComponent
           dice={dice}
           onPress={(i: number) => {
@@ -150,7 +150,7 @@ export default function Index() {
         {!!log.length && (
           <>
             {log.map((item, i) => (
-              <Typo key={i} type="default" style={{ textAlign: "center" }}>
+              <Typo key={i} type="default" color="info" style={{ textAlign: "center" }}>
                 {item}
               </Typo>
             ))}

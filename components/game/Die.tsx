@@ -43,8 +43,8 @@ export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) 
       <Animated.View
         style={{
           transform: [{ rotate: spin }],
-          width: 50,
-          height: 50,
+          width: 60,
+          height: 60,
           overflow: "hidden",
           borderWidth: 1,
           borderColor: selected ? "#f00" : "#000",
@@ -53,10 +53,10 @@ export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) 
       >
         <Image
           style={{
-            width: 150,
-            height: 100,
-            left: -50 * ((die.value - 1) % 3),
-            top: -50 * (die.value > 3 ? 1 : 0),
+            width: 180,
+            height: 120,
+            left: -60 * ((die.value - 1) % 3),
+            top: -60 * (die.value > 3 ? 1 : 0),
           }}
           source={require("@/assets/dice/default.png")}
         />
@@ -79,10 +79,11 @@ const styles = StyleSheet.create({
   diceContainer: {
     height: "100%",
     backgroundColor: Colors.bg2,
-    gap: 5,
+    gap: 40,
+    flexWrap: "wrap",
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
+    alignContent: "center",
     justifyContent: "center",
   },
 });
