@@ -1,4 +1,5 @@
 import { createContext, PropsWithChildren, useContext, useReducer } from "react";
+import { rollAction } from "./actions";
 import { initialState, ROUND_POINTS } from "./constants";
 import { GameState, GameStateAction, GameStateProps, GameStatus } from "./types";
 
@@ -23,11 +24,13 @@ const reducer = (state: GameState, action: GameStateAction) => {
       newState = { ...state, roll: initialState.roll, hand: state.hand < state.maxHand ? state.hand + 1 : state.hand };
       break;
     case "roll":
-      newState = { ...state, roll: state.roll < state.maxRoll ? state.roll + 1 : state.roll };
+      newState = rollAction(state, action.payload);
       break;
     case "setScore":
       newState = { ...state, score: parseInt(action.payload!) };
       break;
+    case "setSelected":
+      newState = { ...state, selected: action.payload };
   }
 
   // check status

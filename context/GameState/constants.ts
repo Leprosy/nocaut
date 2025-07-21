@@ -1,6 +1,8 @@
-import { GameStatus } from "./types";
+import { GameState, GameStatus } from "./types";
 
-export const initialState = {
+export const initialState: GameState = {
+  dice: [],
+  selected: [],
   round: 1,
   maxHand: 4,
   hand: 0,

@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/Colors";
+import { useGameStateContext } from "@/context/GameState/GameState";
 import { Die } from "@/lib/Die";
 import { useEffect, useState } from "react";
 import { Animated, Easing, Image, StyleSheet, TouchableOpacity } from "react-native";
@@ -65,7 +66,9 @@ export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) 
   );
 }
 
-export function DiceComponent({ dice, onPress }: { dice: Die[]; onPress: Function }) {
+export function DiceComponent() {
+  const { dice } = useGameStateContext();
+
   return (
     <Card style={[styles.diceContainer]}>
       {dice.map((die: Die, i: number) => (

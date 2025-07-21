@@ -1,10 +1,7 @@
 import { DiceComponent } from "@/components/game/Die";
 import { Button, Card, Typo } from "@/components/ui";
-import { DISPLAY_DELAY } from "@/constants/Values";
 import { ROUND_POINTS } from "@/context/GameState/constants";
 import { GameStatus } from "@/context/GameState/types";
-import { Dice, Die } from "@/lib/Die";
-import { executeWait } from "@/lib/Utils";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useGameStateContext } from "../../context/GameState/GameState";
@@ -16,11 +13,11 @@ export default function Index() {
   } = useGameStateContext();
 
   const router = useRouter();
-  const [dice, setDice] = useState<Die[]>([]);
+  // const [dice, setDice] = useState<Die[]>([]);
   const [log, setLog] = useState<string[]>([]);
-  const [selected, setSelected] = useState<number[]>([]);
+  // const [selected, setSelected] = useState<number[]>([]);
 
-  const rollDice = () => {
+  /* const rollDice = () => {
     const newDice = Array(5);
 
     for (let i = 0; i < 5; ++i) {
@@ -32,8 +29,9 @@ export default function Index() {
     }
 
     setDice(newDice);
-  };
+  }; */
 
+  /*
   const scoreHand = async () => {
     if (dice.length > 0) {
       const handData = Dice.getHand(dice);
@@ -67,12 +65,13 @@ export default function Index() {
       cleanUp();
     }
   };
+*/
 
-  const cleanUp = () => {
-    setSelected([]);
-    setLog([]);
-    setDice([]);
-  };
+  /* const cleanUp = () => {
+    // setSelected([]);
+    // setLog([]);
+    // setDice([]);
+  }; */
 
   useEffect(() => {
     switch (status) {
@@ -90,7 +89,7 @@ export default function Index() {
         router.navigate("/game/won");
         break;
     }
-  }, [status, router]);
+  }, [status, router, dispatch]);
 
   return (
     <Card main color="bg" dir="column">
@@ -109,16 +108,16 @@ export default function Index() {
               <Button
                 disabled={!(maxRoll - roll)}
                 onPress={() => {
-                  rollDice();
+                  // rollDice();
                   dispatch({ type: "roll" });
                 }}
                 label="Roll"
               />
 
               <Button
-                disabled={!dice.length || !!log.length}
+                disabled={roll === maxRoll}
                 onPress={() => {
-                  scoreHand();
+                  // scoreHand();
                 }}
                 label="Play"
               />
@@ -133,8 +132,8 @@ export default function Index() {
       </Card>
 
       <Card dir="column" style={{ flex: 2 }}>
-        <DiceComponent
-          dice={dice}
+        <DiceComponent />
+        {/*dice={dice}
           onPress={(i: number) => {
             const index = selected.indexOf(i);
             if (index < 0) {
@@ -143,7 +142,7 @@ export default function Index() {
               setSelected([...selected.filter((j: number) => i !== j)]);
             }
           }}
-        />
+        /> */}
       </Card>
 
       <Card dir="column" style={{ flex: 1 }}>

@@ -1,3 +1,5 @@
+import { Die } from "@/lib/Die";
+
 export enum GameStatus {
   PLAYING,
   DEAD,
@@ -5,6 +7,8 @@ export enum GameStatus {
 }
 
 export type GameState = {
+  dice: Die[];
+  selected: number[];
   round: number;
   maxHand: number;
   hand: number;
@@ -20,6 +24,8 @@ export type GameStateProps = {
 };
 
 export type GameStateAction = {
-  type: "roll" | "hand" | "round" | "reset" | "setScore";
+  type: "roll" | "hand" | "round" | "reset" | "setScore" | "setSelected";
   payload?: any;
 };
+
+export type GameStateActionHandler = (state: GameState, payload: any) => GameState;
