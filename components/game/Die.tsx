@@ -1,12 +1,12 @@
 import { Colors } from "@/constants/Colors";
 import { useGameStateContext } from "@/context/GameState/GameState";
 import { Die } from "@/lib/Die";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Animated, Easing, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Card } from "../ui";
 
-export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) {
-  const [selected, setSelected] = useState(false);
+export function DieComponent({ die, selected, onPress }: { die: Die; selected: boolean; onPress: Function }) {
+  const { dispatch } = useGameStateContext();
   const angle = new Animated.Value(0);
 
   useEffect(() => {
@@ -30,17 +30,7 @@ export function DieComponent({ die, onPress }: { die: Die; onPress: Function }) 
   });
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.6}
-      onLongPress={() => {
-        //roll();
-        console.log("flip die?");
-      }}
-      onPress={() => {
-        onPress();
-        setSelected(!selected);
-      }}
-    >
+    <TouchableOpacity activeOpacity={0.6} onLongPress={() => console.log("flip die?")} onPress={() => onPress()}>
       <Animated.View
         style={{
           transform: [{ rotate: spin }],
@@ -75,7 +65,12 @@ export function DiceComponent() {
   return (
     <Card style={[styles.diceContainer]}>
       {dice.map((die: Die, i: number) => (
-        <DieComponent key={i} die={die} onPress={() => dispatch({ type: "select", payload: i })} />
+        <DieComponent
+          key={i}
+          selected={selected.includes(i)}
+          die={die}
+          onPress={() => dispatch({ type: "select", payload: i })}
+        />
       ))}
     </Card>
   );
