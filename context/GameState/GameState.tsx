@@ -31,8 +31,10 @@ const reducer = (state: GameState, action: GameStateAction) => {
       break;
     case "select":
       newState = selectAction(state, action.payload);
+      break;
     case "playHand":
       newState = playHandAction(state, action.payload);
+      break;
   }
 
   // check status
