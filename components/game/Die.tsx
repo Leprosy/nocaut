@@ -5,8 +5,17 @@ import { useEffect } from "react";
 import { Animated, Easing, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Card } from "../ui";
 
-export function DieComponent({ die, selected, onPress }: { die: Die; selected: boolean; onPress: Function }) {
-  const { dispatch } = useGameStateContext();
+export function DieComponent({
+  die,
+  selected,
+  onPress,
+  onLongPress,
+}: {
+  die: Die;
+  selected: boolean;
+  onPress: Function;
+  onLongPress: Function;
+}) {
   const angle = new Animated.Value(0);
 
   useEffect(() => {
@@ -30,7 +39,7 @@ export function DieComponent({ die, selected, onPress }: { die: Die; selected: b
   });
 
   return (
-    <TouchableOpacity activeOpacity={0.6} onLongPress={() => console.log("flip die?")} onPress={() => onPress()}>
+    <TouchableOpacity activeOpacity={0.6} onLongPress={() => onLongPress()} onPress={() => onPress()}>
       <Animated.View
         style={{
           transform: [{ rotate: spin }],
@@ -70,6 +79,7 @@ export function DiceComponent() {
           selected={selected.includes(i)}
           die={die}
           onPress={() => dispatch({ type: "select", payload: i })}
+          onLongPress={() => dispatch({ type: "flip", payload: i })}
         />
       ))}
     </Card>

@@ -1,5 +1,6 @@
 import { DiceComponent } from "@/components/game/Die";
 import { Button, Card, Typo } from "@/components/ui";
+import { DISPLAY_DELAY } from "@/constants/Values";
 import { ROUND_POINTS } from "@/context/GameState/constants";
 import { GameStatus } from "@/context/GameState/types";
 import { useRouter } from "expo-router";
@@ -14,6 +15,23 @@ export default function Index() {
 
   const router = useRouter();
   const [log, setLog] = useState<string[]>([]);
+
+  const playHand = () => {
+    dispatch({
+      type: "playHand",
+      payload: (data: any) => {
+        console.log("hand", data);
+
+        // REFACTOR THIS CRAP
+        setTimeout(() => {
+          setLog(data.log);
+
+          /* dispatch({ type: "setScore", payload: score + data.points });
+          dispatch({ type: "hand" }); */
+        }, 500);
+      },
+    });
+  };
 
   useEffect(() => {
     switch (status) {
@@ -48,16 +66,7 @@ export default function Index() {
 
             <Card dir="row">
               <Button disabled={!(maxRoll - roll)} onPress={() => dispatch({ type: "roll" })} label="Roll" />
-              <Button
-                disabled={roll === 0}
-                onPress={() =>
-                  dispatch({
-                    type: "playHand",
-                    payload: (data: any) => console.log("hand", data),
-                  })
-                }
-                label="Play"
-              />
+              <Button disabled={roll === 0} onPress={() => playHand()} label="Play" />
             </Card>
           </Card>
 
@@ -73,16 +82,31 @@ export default function Index() {
       </Card>
 
       <Card dir="column" style={{ flex: 1 }}>
-        {!!log.length && (
-          <>
-            {log.map((item, i) => (
-              <Typo key={i} type="default" color="info" style={{ textAlign: "center" }}>
-                {item}
-              </Typo>
-            ))}
-          </>
-        )}
+        <Log data={log} />
       </Card>
     </Card>
   );
 }
+
+const Log = ({ data }: { data: string[] }) => {
+  const [msgs, setMsgs] = useState<string[]>([]);
+
+  useEffect(() => {
+    console.log("useEffect data", data);
+    setMsgs(data);
+  }, [data]);
+
+  useEffect(() => {
+    console.log("useEffect msgs", msgs);
+
+    if (msgs.length > 1) {
+      setTimeout(() => setMsgs(msgs.slice(1)), DISPLAY_DELAY);
+    }
+  }, [msgs]);
+
+  return (
+    <Typo type="default" color="info" style={{ textAlign: "center" }}>
+      {msgs.at(0)}
+    </Typo>
+  );
+};

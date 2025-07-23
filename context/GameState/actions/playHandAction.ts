@@ -3,36 +3,29 @@ import { GameStateActionHandler } from "../types";
 
 export const playHandAction: GameStateActionHandler = (state, payload) => {
   const { dice } = state;
-
   const handData = Dice.getHand(dice);
-  payload(handData);
   let points = 0;
-  /* 
-      // Hand
-      await executeWait(() => setLog([...log, "You got " + handData.name]), DISPLAY_DELAY);
+  let log = [];
 
-      // Base
-      points += handData.base;
-      await executeWait(() => setLog([...log, "Base " + handData.base]), DISPLAY_DELAY);
+  // Hand
+  log = ["You got " + handData.name];
 
-      // Dice
-      const scored = dice.filter((i, j) => handData.scoredDie.indexOf(j) >= 0);
-      scored.forEach((die) => (points += die.value === 1 ? 10 : die.value));
-      await executeWait(
-        () => setLog([...log, scored.map((die) => (die.value === 1 ? 10 : die.value)).join("+")]),
-        DISPLAY_DELAY
-      );
+  // Base
+  points += handData.base;
+  log.push("Base " + handData.base);
 
-      // Mult
-      points *= handData.mult;
-      await executeWait(() => setLog([...log, "X " + handData.mult]), DISPLAY_DELAY);
+  // Dice
+  const scored = dice.filter((i, j) => handData.scoredDie.indexOf(j) >= 0);
+  scored.forEach((die) => (points += die.value === 1 ? 10 : die.value));
+  log.push(scored.map((die) => (die.value === 1 ? 10 : die.value)).join("+"));
 
-      // Total
-      await executeWait(() => setLog([...log, "TOTAL : " + points]), DISPLAY_DELAY);
+  // Mult
+  points *= handData.mult;
+  log.push("X " + handData.mult);
 
-      dispatch({ type: "setScore", payload: score + points });
-      dispatch({ type: "hand" });
-      cleanUp();
- */
+  // Total
+  log.push("TOTAL : " + points);
+
+  payload({ points, log });
   return { ...state };
 };

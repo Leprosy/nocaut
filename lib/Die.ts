@@ -76,6 +76,10 @@ export class Dice {
     return scored;
   }
 
+  static getFlipDie(rank: number) {
+    return { 1: 6, 2: 5, 3: 4, 4: 3, 5: 2, 6: 1 }[rank];
+  }
+
   static getHand(dice: Die[]): Hand {
     /*
     pair

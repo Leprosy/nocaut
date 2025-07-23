@@ -24,7 +24,7 @@ export type GameStateProps = {
 };
 
 export type GameStateAction = {
-  type: "roll" | "hand" | "round" | "reset" | "setScore" | "select" | "playHand";
+  type: "roll" | "hand" | "round" | "reset" | "setScore" | "select" | "playHand" | "flip";
   payload?: any;
 };
 
