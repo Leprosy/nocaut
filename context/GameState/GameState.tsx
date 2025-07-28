@@ -21,7 +21,12 @@ const reducer = (state: GameState, action: GameStateAction) => {
       };
       break;
     case "hand":
-      newState = { ...state, roll: initialState.roll, hand: state.hand < state.maxHand ? state.hand + 1 : state.hand };
+      newState = {
+        ...state,
+        roll: initialState.roll,
+        selected: [],
+        hand: state.hand < state.maxHand ? state.hand + 1 : state.hand,
+      };
       break;
     case "roll":
       newState = rollAction(state, action.payload);
