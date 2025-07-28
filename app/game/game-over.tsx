@@ -1,10 +1,9 @@
 import { Card, Typo } from "@/components/ui";
 import { Link } from "expo-router";
-import { StyleSheet } from "react-native";
 
 export default function GameOver() {
   return (
-    <Card style={[styles.mainContainer]}>
+    <Card main dir="column" align="center" justify="center" color="bg">
       <Typo type="subtitle">GAME OVER!</Typo>
       <Link href="/">
         <Typo type="link">Go to home</Typo>
@@ -12,13 +11,3 @@ export default function GameOver() {
     </Card>
   );
 }
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    height: "100%",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-  },
-});
