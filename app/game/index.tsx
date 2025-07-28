@@ -15,6 +15,7 @@ export default function Index() {
 
   const router = useRouter();
   const [log, setLog] = useState<string[]>([]);
+  const [onFinish, setOnFinish] = useState<Function>();
 
   const playHand = () => {
     dispatch({
@@ -24,10 +25,13 @@ export default function Index() {
 
         // REFACTOR THIS CRAP
         setTimeout(() => {
+          const fn = () => {
+            dispatch({ type: "setScore", payload: score + data.points });
+            dispatch({ type: "hand" });
+            setLog([]);
+          };
           setLog(data.log);
-
-          /* dispatch({ type: "setScore", payload: score + data.points });
-          dispatch({ type: "hand" }); */
+          setOnFinish(() => fn);
         }, 500);
       },
     });
@@ -65,8 +69,12 @@ export default function Index() {
             </Typo>
 
             <Card dir="row">
-              <Button disabled={!(maxRoll - roll)} onPress={() => dispatch({ type: "roll" })} label="Roll" />
-              <Button disabled={roll === 0} onPress={() => playHand()} label="Play" />
+              <Button
+                disabled={log.length > 0 || !(maxRoll - roll)}
+                onPress={() => dispatch({ type: "roll" })}
+                label="Roll"
+              />
+              <Button disabled={log.length > 0 || roll === 0} onPress={() => playHand()} label="Play" />
             </Card>
           </Card>
 
@@ -82,30 +90,35 @@ export default function Index() {
       </Card>
 
       <Card dir="column" style={{ flex: 1 }}>
-        <Log data={log} />
+        <Log data={log} onFinish={onFinish} />
       </Card>
     </Card>
   );
 }
 
-const Log = ({ data }: { data: string[] }) => {
+const Log = ({ data, onFinish }: { data: string[]; onFinish?: Function }) => {
   const [msgs, setMsgs] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log("useEffect data", data);
-    setMsgs(data);
-  }, [data]);
+    if (data.length > 0) {
+      console.log("Log: useEffect props", data, onFinish?.toString());
+      setMsgs(data);
+    }
+  }, [data, onFinish]);
 
   useEffect(() => {
-    console.log("useEffect msgs", msgs);
-
     if (msgs.length > 1) {
       setTimeout(() => setMsgs(msgs.slice(1)), DISPLAY_DELAY);
+    } else if (msgs.length === 1 && data.length > 0) {
+      setTimeout(() => {
+        setMsgs([]);
+        onFinish?.();
+      }, DISPLAY_DELAY);
     }
-  }, [msgs]);
+  }, [msgs, onFinish]);
 
   return (
-    <Typo type="default" color="info" style={{ textAlign: "center" }}>
+    <Typo type="subtitle" color="info" style={{ textAlign: "center" }}>
       {msgs.at(0)}
     </Typo>
   );
