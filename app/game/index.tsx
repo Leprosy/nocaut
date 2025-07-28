@@ -32,7 +32,7 @@ export default function Index() {
           };
           setLog(data.log);
           setOnFinish(() => fn);
-        }, 500);
+        }, 100);
       },
     });
   };
