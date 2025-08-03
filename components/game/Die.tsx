@@ -71,8 +71,10 @@ export function DieComponent({
       activeOpacity={0.6}
       onPress={() => onPress()}
       onLongPress={() => {
-        setState("flip");
-        onLongPress();
+        // HACK onLongPress return false if not valid and undefined if it is xd
+        if (onLongPress() !== false) {
+          setState("flip");
+        }
       }}
     >
       <Animated.View
