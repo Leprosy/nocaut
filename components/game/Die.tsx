@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { useGameStateContext } from "@/context/GameState/GameState";
 import { Die } from "@/lib/Die";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Animated, Easing, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Card } from "../ui";
 
@@ -16,7 +16,9 @@ export function DieComponent({
   onPress: Function;
   onLongPress: Function;
 }) {
+  const [state, setState] = useState<"" | "error" | "flip">("");
   const angle = new Animated.Value(0);
+  const size = new Animated.Value(0);
 
   useEffect(() => {
     console.log("new", die);
@@ -26,10 +28,29 @@ export function DieComponent({
     () =>
       Animated.timing(angle, {
         toValue: 1,
-        duration: 500,
+        duration: 300,
         easing: Easing.linear,
         useNativeDriver: true,
       }).start(),
+    [die]
+  );
+
+  useEffect(
+    () =>
+      Animated.sequence([
+        Animated.timing(size, {
+          toValue: 1,
+          duration: 50,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(size, {
+          toValue: 0,
+          duration: 50,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]).start(),
     [die]
   );
 
@@ -38,11 +59,25 @@ export function DieComponent({
     outputRange: ["0deg", "360deg"],
   });
 
+  const scale = size.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.25],
+  });
+
+  const anims = { spin1: { rotate: spin }, scale1: { scale: scale } };
+
   return (
-    <TouchableOpacity activeOpacity={0.6} onLongPress={() => onLongPress()} onPress={() => onPress()}>
+    <TouchableOpacity
+      activeOpacity={0.6}
+      onPress={() => onPress()}
+      onLongPress={() => {
+        setState("flip");
+        onLongPress();
+      }}
+    >
       <Animated.View
         style={{
-          transform: [{ rotate: spin }],
+          transform: [state === "" ? anims.spin1 : anims.scale1],
           width: 60,
           height: 60,
           overflow: "hidden",
