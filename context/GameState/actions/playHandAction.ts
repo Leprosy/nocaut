@@ -2,8 +2,8 @@ import { Dice } from "@/lib/Die";
 import { GameStateActionHandler } from "../types";
 
 export const playHandAction: GameStateActionHandler = (state, payload) => {
-  const { dice, perks } = state;
-  const handData = Dice.getHand(dice);
+  const { dice, perks, roll } = state;
+  const handData = Dice.getHand(dice, roll === 0);
   let points = 0;
   let log = [];
 
