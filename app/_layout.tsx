@@ -1,3 +1,4 @@
+import { GameStateProvider } from "@/context/GameState/GameState";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -15,9 +16,9 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <GameStateProvider>
       <Stack />
       <StatusBar style="auto" />
-    </>
+    </GameStateProvider>
   );
 }

@@ -5,7 +5,7 @@ export default function GameOver() {
   return (
     <Card main dir="column" align="center" justify="center" color="bg">
       <Typo type="subtitle">GAME OVER!</Typo>
-      <Link href="/">
+      <Link replace href="/">
         <Typo type="link">Go to home</Typo>
       </Link>
     </Card>

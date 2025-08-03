@@ -45,12 +45,12 @@ export default function Index() {
 
       case GameStatus.DEAD:
         dispatch({ type: "reset" });
-        router.navigate("/game/game-over");
+        router.replace("/game-over");
         break;
 
       case GameStatus.WON:
         dispatch({ type: "round" });
-        router.navigate("/game/won");
+        router.replace("/won");
         break;
     }
   }, [status, router, dispatch]);

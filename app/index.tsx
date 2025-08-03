@@ -6,7 +6,7 @@ import { Link, Stack } from "expo-router";
 export default function HomeScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: "Fuck you!", statusBarStyle: "dark" }} />
+      <Stack.Screen options={{ navigationBarHidden: true }} />
 
       <Card main color="bg" dir="column" align="center" justify="center" gap={LSPACING * 8}>
         <Typo type="title">Nocaut!</Typo>

@@ -23,7 +23,8 @@ export default function Won() {
   };
 
   useEffect(() => {
-    return () => console.log("unmount");
+    console.log("won render");
+    return () => console.log("won unmount");
   }, []);
 
   return (
