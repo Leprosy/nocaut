@@ -3,9 +3,13 @@ import { Button, Card, Typo } from "@/components/ui";
 import { DISPLAY_DELAY } from "@/constants/Values";
 import { ROUND_POINTS } from "@/context/GameState/constants";
 import { GameStatus } from "@/context/GameState/types";
+import { useAudioPlayer } from "expo-audio";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useGameStateContext } from "../../context/GameState/GameState";
+
+const rolla = require("@/assets/audio/roll1.mp3");
+const claps = require("@/assets/audio/claps.mp3");
 
 export default function Index() {
   const {
@@ -13,6 +17,8 @@ export default function Index() {
     dispatch,
   } = useGameStateContext();
 
+  const rollPlayer = useAudioPlayer(rolla);
+  const clapsPlayer = useAudioPlayer(claps);
   const router = useRouter();
   const [log, setLog] = useState<string[]>([]);
   const [onFinish, setOnFinish] = useState<Function>();
@@ -49,6 +55,7 @@ export default function Index() {
         break;
 
       case GameStatus.WON:
+        clapsPlayer.play();
         dispatch({ type: "round" });
         router.replace("/won");
         break;
@@ -76,7 +83,11 @@ export default function Index() {
             <Card dir="row">
               <Button
                 disabled={log.length > 0 || !(maxRoll - roll)}
-                onPress={() => dispatch({ type: "roll" })}
+                onPress={async () => {
+                  await rollPlayer.seekTo(0);
+                  rollPlayer.play();
+                  dispatch({ type: "roll" });
+                }}
                 label="Roll"
               />
               <Button disabled={log.length > 0 || roll === 0} onPress={() => playHand()} label="Play" />

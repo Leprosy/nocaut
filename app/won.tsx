@@ -7,7 +7,7 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 
-const audioSource = require("../assets/audio/shuffle.mp3");
+const audioSource = require("../assets/audio/claps.mp3");
 
 export default function Won() {
   const player = useAudioPlayer(audioSource);

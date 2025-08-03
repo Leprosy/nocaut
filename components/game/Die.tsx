@@ -1,10 +1,14 @@
 import { Colors } from "@/constants/Colors";
 import { useGameStateContext } from "@/context/GameState/GameState";
 import { Die } from "@/lib/Die";
+import { useAudioPlayer } from "expo-audio";
 import { useEffect } from "react";
 import { Animated, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Card } from "../ui";
 import { getErrorAnimation, getFlipAnimation, getRollAnimation } from "./DieAnim";
+
+const error = require("@/assets/audio/error.mp3");
+const flip = require("@/assets/audio/flip.mp3");
 
 export function DieComponent({
   die,
@@ -20,10 +24,11 @@ export function DieComponent({
   const [rotate, rollAnimation] = getRollAnimation();
   const [scale, flipAnimation] = getFlipAnimation();
   const [translateX, errorAnimation] = getErrorAnimation();
+  const errorPlayer = useAudioPlayer(error);
+  const flipPlayer = useAudioPlayer(flip);
 
   useEffect(() => {
     console.log("new", die);
-
     if (die.anim === "flip") {
       flipAnimation.reset();
       flipAnimation.start();
@@ -37,13 +42,15 @@ export function DieComponent({
     <TouchableOpacity
       activeOpacity={0.6}
       onPress={() => onPress()}
-      onLongPress={() => {
+      onLongPress={async () => {
         // HACK onLongPress return false if not valid and undefined if it is xd
         if (onLongPress() !== false) {
           console.log("flip");
-          flipAnimation.reset();
-          flipAnimation.start();
+          await flipPlayer.seekTo(0);
+          flipPlayer.play();
         } else {
+          await errorPlayer.seekTo(0);
+          errorPlayer.play();
           console.log("error");
           errorAnimation.reset();
           errorAnimation.start();
