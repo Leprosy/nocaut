@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 36,
-    fontWeight: "bold",
+    fontWeight: "600",
     lineHeight: 42,
     textShadowColor: Colors.shadow,
     textShadowOffset: { width: 4, height: 4 },
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
   link: {
     lineHeight: 30,

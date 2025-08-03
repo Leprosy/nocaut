@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   diceContainer: {
     height: "100%",
     backgroundColor: Colors.bg2,
-    gap: 40,
+    gap: 50,
     flexWrap: "wrap",
     display: "flex",
     flexDirection: "row",
