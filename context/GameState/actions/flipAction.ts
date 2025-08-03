@@ -9,6 +9,7 @@ export const flipAction: GameStateActionHandler = (state, payload) => {
   const newDie = new Die();
   newDie.value = fliped || 0;
   newDie.roll = die.roll;
+  newDie.anim = "flip"; // XD
 
   return { ...state, dice: state.dice.toSpliced(payload, 1, newDie) };
 };

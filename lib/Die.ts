@@ -1,12 +1,14 @@
-import { countData, DieMaterial, Hand } from "./types";
+import { countData, DieAnim, DieMaterial, Hand } from "./types";
 
 export class Die {
   roll: number;
   value: number;
   maxValue: number;
   material: DieMaterial;
+  anim: DieAnim;
 
   constructor(maxValue?: number) {
+    this.anim = "roll";
     this.roll = 0;
     this.value = 0;
     this.maxValue = maxValue || 6;

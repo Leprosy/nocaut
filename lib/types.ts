@@ -17,6 +17,8 @@ export type countData = {
   count: number;
 };
 
+export type DieAnim = "roll" | "error" | "flip";
+
 export type Perk = {
   // TODO: number | function ? more advanced perks?
   id: number;

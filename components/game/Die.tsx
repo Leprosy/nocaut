@@ -1,9 +1,10 @@
 import { Colors } from "@/constants/Colors";
 import { useGameStateContext } from "@/context/GameState/GameState";
 import { Die } from "@/lib/Die";
-import { useEffect, useState } from "react";
-import { Animated, Easing, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { useEffect } from "react";
+import { Animated, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Card } from "../ui";
+import { getErrorAnimation, getFlipAnimation, getRollAnimation } from "./DieAnim";
 
 export function DieComponent({
   die,
@@ -16,86 +17,21 @@ export function DieComponent({
   onPress: Function;
   onLongPress: Function;
 }) {
-  const [state, setState] = useState<"" | "error" | "flip">("");
-  const angle = new Animated.Value(0);
-  const size = new Animated.Value(0);
-  const xpos = new Animated.Value(0);
+  const [rotate, rollAnimation] = getRollAnimation();
+  const [scale, flipAnimation] = getFlipAnimation();
+  const [translateX, errorAnimation] = getErrorAnimation();
 
   useEffect(() => {
     console.log("new", die);
+
+    if (die.anim === "flip") {
+      flipAnimation.reset();
+      flipAnimation.start();
+    } else {
+      rollAnimation.reset();
+      rollAnimation.start();
+    }
   }, [die]);
-
-  useEffect(
-    () =>
-      Animated.timing(angle, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }).start(),
-    [die]
-  );
-
-  useEffect(
-    () =>
-      Animated.sequence([
-        Animated.timing(size, {
-          toValue: 1,
-          duration: 50,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-        Animated.timing(size, {
-          toValue: 0,
-          duration: 50,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-      ]).start(),
-    [die]
-  );
-
-  useEffect(
-    () =>
-      Animated.sequence([
-        Animated.timing(xpos, {
-          toValue: 1,
-          duration: 50,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-        Animated.timing(xpos, {
-          toValue: -1,
-          duration: 50,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-        Animated.timing(xpos, {
-          toValue: 0,
-          duration: 50,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-      ]).start(),
-    [die]
-  );
-
-  const spin = angle.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
-
-  const scale = size.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1.25],
-  });
-
-  const translate = xpos.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: [-5, 0, 5],
-  });
-
-  const anims = { roll: { rotate: spin }, flip: { scale: scale }, error: { translateX: translate } };
 
   return (
     <TouchableOpacity
@@ -104,16 +40,19 @@ export function DieComponent({
       onLongPress={() => {
         // HACK onLongPress return false if not valid and undefined if it is xd
         if (onLongPress() !== false) {
-          setState("flip");
+          console.log("flip");
+          flipAnimation.reset();
+          flipAnimation.start();
         } else {
           console.log("error");
-          setState("error");
+          errorAnimation.reset();
+          errorAnimation.start();
         }
       }}
     >
       <Animated.View
         style={{
-          transform: [state === "" ? anims.roll : anims[state]],
+          transform: [{ rotate }, { scale }, { translateX }],
           width: 60,
           height: 60,
           overflow: "hidden",
