@@ -43,7 +43,9 @@ const reducer = (state: GameState, action: GameStateAction) => {
     case "playHand": // TODO: first roll (pistolon, olimpico)
       newState = playHandAction(state, action.payload);
       break;
-    case "flip": // TODO: Different animation for flip
+    case "flip":
+      // TODO: Different animation for flip
+      // TODO: Cant flip first roll dice
       newState = flipAction(state, action.payload);
       break;
     case "addPerk":

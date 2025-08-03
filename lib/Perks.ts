@@ -49,13 +49,13 @@ export const Perks: Perk[] = [
   },
   {
     id: 20,
-    name: "Points",
+    name: "The Points",
     description: "Have a base 50 points",
     totalIncrease: 50,
   },
   {
     id: 21,
-    name: "Mults",
+    name: "The Mults",
     description: "Have a base 2 mult",
     totalMult: 2,
   },
