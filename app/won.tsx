@@ -2,11 +2,15 @@ import { Card, Typo } from "@/components/ui";
 import { useGameStateContext } from "@/context/GameState/GameState";
 import { getRandomPerks } from "@/lib/Perks";
 import { Perk } from "@/lib/types";
+import { useAudioPlayer } from "expo-audio";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 
+const audioSource = require("../assets/audio/shuffle.mp3");
+
 export default function Won() {
+  const player = useAudioPlayer(audioSource);
   const [ready, setReady] = useState(false);
   const {
     dispatch,
@@ -24,6 +28,7 @@ export default function Won() {
 
   useEffect(() => {
     console.log("won render");
+    player.play();
     return () => console.log("won unmount");
   }, []);
 
