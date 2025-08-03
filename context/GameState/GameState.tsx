@@ -20,6 +20,7 @@ const reducer = (state: GameState, action: GameStateAction) => {
         score: initialState.score,
         hand: initialState.hand,
         round: state.round + 1,
+        dice: [],
       };
       break;
     case "hand":
@@ -39,10 +40,10 @@ const reducer = (state: GameState, action: GameStateAction) => {
     case "select":
       newState = selectAction(state, action.payload);
       break;
-    case "playHand":
+    case "playHand": // TODO: first roll (pistolon, olimpico)
       newState = playHandAction(state, action.payload);
       break;
-    case "flip":
+    case "flip": // TODO: Different animation for flip
       newState = flipAction(state, action.payload);
       break;
     case "addPerk":

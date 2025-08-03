@@ -55,6 +55,11 @@ export default function Index() {
     }
   }, [status, router, dispatch]);
 
+  useEffect(() => {
+    console.log("game index mount");
+    return () => console.log("game index iunmount");
+  }, []);
+
   return (
     <Card main color="bg" dir="column">
       <Card dir="column" style={{ flex: 1 }}>
