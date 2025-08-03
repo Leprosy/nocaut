@@ -19,6 +19,7 @@ export function DieComponent({
   const [state, setState] = useState<"" | "error" | "flip">("");
   const angle = new Animated.Value(0);
   const size = new Animated.Value(0);
+  const xpos = new Animated.Value(0);
 
   useEffect(() => {
     console.log("new", die);
@@ -54,6 +55,31 @@ export function DieComponent({
     [die]
   );
 
+  useEffect(
+    () =>
+      Animated.sequence([
+        Animated.timing(xpos, {
+          toValue: 1,
+          duration: 50,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(xpos, {
+          toValue: -1,
+          duration: 50,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(xpos, {
+          toValue: 0,
+          duration: 50,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]).start(),
+    [die]
+  );
+
   const spin = angle.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
@@ -64,7 +90,12 @@ export function DieComponent({
     outputRange: [1, 1.25],
   });
 
-  const anims = { spin1: { rotate: spin }, scale1: { scale: scale } };
+  const translate = xpos.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: [-5, 0, 5],
+  });
+
+  const anims = { roll: { rotate: spin }, flip: { scale: scale }, error: { translateX: translate } };
 
   return (
     <TouchableOpacity
@@ -74,12 +105,15 @@ export function DieComponent({
         // HACK onLongPress return false if not valid and undefined if it is xd
         if (onLongPress() !== false) {
           setState("flip");
+        } else {
+          console.log("error");
+          setState("error");
         }
       }}
     >
       <Animated.View
         style={{
-          transform: [state === "" ? anims.spin1 : anims.scale1],
+          transform: [state === "" ? anims.roll : anims[state]],
           width: 60,
           height: 60,
           overflow: "hidden",
