@@ -3,7 +3,7 @@ import { StyleSheet, Text, type TextProps } from "react-native";
 
 export type TypoProps = TextProps & {
   color?: keyof typeof Colors;
-  type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link" | "button";
+  type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link" | "button" | "small";
 };
 
 export function Typo({ style, color, type = "default", ...rest }: TypoProps) {
@@ -18,6 +18,10 @@ export function Typo({ style, color, type = "default", ...rest }: TypoProps) {
 const styles = StyleSheet.create({
   default: {
     fontSize: 14,
+    lineHeight: 20,
+  },
+  small: {
+    fontSize: 10,
     lineHeight: 20,
   },
   defaultSemiBold: {
