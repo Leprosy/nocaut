@@ -1,4 +1,5 @@
 import { Die } from "@/lib/Die";
+import { Perk } from "@/lib/types";
 
 export enum GameStatus {
   PLAYING,
@@ -16,6 +17,7 @@ export type GameState = {
   roll: number;
   score: number;
   status: GameStatus;
+  perks: Perk[];
 };
 
 export type GameStateProps = {
@@ -24,7 +26,7 @@ export type GameStateProps = {
 };
 
 export type GameStateAction = {
-  type: "roll" | "hand" | "round" | "reset" | "setScore" | "select" | "playHand" | "flip";
+  type: "roll" | "hand" | "round" | "reset" | "setScore" | "select" | "playHand" | "flip" | "addPerk";
   payload?: any;
 };
 

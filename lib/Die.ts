@@ -1,21 +1,4 @@
-export enum DieMaterial {
-  Default,
-  Gold,
-  Silver,
-  Bronze,
-}
-
-export type Hand = {
-  name: string;
-  base: number;
-  mult: number;
-  scoredDie: number[];
-};
-
-export type countData = {
-  rank: number;
-  count: number;
-};
+import { countData, DieMaterial, Hand } from "./types";
 
 export class Die {
   value: number;

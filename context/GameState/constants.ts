@@ -10,6 +10,7 @@ export const initialState: GameState = {
   roll: 0,
   score: 0,
   status: GameStatus.PLAYING,
+  perks: [],
 };
 
 export const ROUND_POINTS = 300;

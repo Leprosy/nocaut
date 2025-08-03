@@ -1,3 +1,4 @@
+import { Perk } from "@/lib/types";
 import { createContext, PropsWithChildren, useContext, useReducer } from "react";
 import { flipAction, playHandAction, rollAction, selectAction } from "./actions";
 import { initialState, ROUND_POINTS } from "./constants";
@@ -6,6 +7,7 @@ import { GameState, GameStateAction, GameStateProps, GameStatus } from "./types"
 const GameStateContext = createContext<GameStateProps | null>(null);
 
 const reducer = (state: GameState, action: GameStateAction) => {
+  console.log("GameState: action received", action);
   let newState: GameState;
 
   switch (action.type) {
@@ -43,6 +45,9 @@ const reducer = (state: GameState, action: GameStateAction) => {
     case "flip":
       newState = flipAction(state, action.payload);
       break;
+    case "addPerk":
+      newState = { ...state, perks: [...state.perks, action.payload as Perk] };
+      break;
   }
 
   // check status
@@ -54,7 +59,7 @@ const reducer = (state: GameState, action: GameStateAction) => {
     newState = { ...newState, status: GameStatus.PLAYING };
   }
 
-  console.log("state updated", newState);
+  console.log("GameState: state updated", newState);
   return newState;
 };
 
