@@ -79,7 +79,7 @@ export function DiceComponent() {
           selected={selected.includes(i)}
           die={die}
           onPress={() => dispatch({ type: "select", payload: i })}
-          onLongPress={() => dispatch({ type: "flip", payload: i })}
+          onLongPress={() => die.roll > 0 && dispatch({ type: "flip", payload: i })}
         />
       ))}
     </Card>

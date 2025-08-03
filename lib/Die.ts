@@ -1,11 +1,13 @@
 import { countData, DieMaterial, Hand } from "./types";
 
 export class Die {
+  roll: number;
   value: number;
   maxValue: number;
   material: DieMaterial;
 
   constructor(maxValue?: number) {
+    this.roll = 0;
     this.value = 0;
     this.maxValue = maxValue || 6;
     this.material = DieMaterial.Default;

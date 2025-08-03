@@ -9,6 +9,7 @@ export const rollAction: GameStateActionHandler = (state, payload) => {
   for (let i = 0; i < 5; ++i) {
     if (state.selected.indexOf(i) < 0) {
       newDice[i] = new Die();
+      newDice[i].roll = state.roll;
     } else {
       newDice[i] = state.dice[i];
     }
